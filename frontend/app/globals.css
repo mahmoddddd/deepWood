@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-deep-brown: #3C2415;
+  --color-beige: #E8DCC4;
+  --color-matte-black: #1A1A1A;
+  --color-gold: #C9A962;
+  --color-cream: #F5F0E8;
+  --color-warm-gray: #8B8178;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-cream);
+  color: var(--color-matte-black);
+}
+
+/* RTL Support */
+html[dir="rtl"] body {
+  font-family: 'Cairo', sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-beige);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-deep-brown);
+  border-radius: 4px;
+}
+
+/* Heading Styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+}
+
+html[dir="rtl"] h1,
+html[dir="rtl"] h2,
+html[dir="rtl"] h3,
+html[dir="rtl"] h4,
+html[dir="rtl"] h5,
+html[dir="rtl"] h6 {
+  font-family: 'Cairo', sans-serif;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-deep-brown text-white px-6 py-3 rounded-md font-medium transition-all duration-300 hover:bg-gold hover:text-deep-brown;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-deep-brown text-deep-brown px-6 py-3 rounded-md font-medium transition-all duration-300 hover:bg-deep-brown hover:text-white;
+  }
+
+  .btn-gold {
+    @apply bg-gold text-deep-brown px-6 py-3 rounded-md font-medium transition-all duration-300 hover:bg-deep-brown hover:text-white;
+  }
+
+  .section-title {
+    @apply text-4xl md:text-5xl font-bold text-deep-brown mb-4;
+  }
+
+  .section-subtitle {
+    @apply text-lg text-warm-gray mb-8;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:-translate-y-2;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 border border-beige rounded-md focus:outline-none focus:border-gold transition-colors;
+  }
+}
+
+/* Hero Section Gradient */
+.hero-gradient {
+  background: linear-gradient(135deg, rgba(60, 36, 21, 0.9) 0%, rgba(26, 26, 26, 0.8) 100%);
+}
+
+/* Gold Accent Line */
+.gold-line {
+  width: 60px;
+  height: 3px;
+  background: var(--color-gold);
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
