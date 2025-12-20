@@ -21,6 +21,7 @@ app.use(cors({
   origin: [
     process.env.FRONTEND_URL,
     'http://localhost:3000',
+    'https://deep-wood-frontend.vercel.app',
     'https://deep-wood.vercel.app',
     /\.vercel\.app$/
   ],
