@@ -1,10 +1,16 @@
 'use client';
 import { useState } from 'react';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
-import translations from '@/locales/en/common.json';
+import enTranslations from '@/locales/en/common.json';
+import arTranslations from '@/locales/ar/common.json';
 
-export default function ContactPage() {
-  const t = translations;
+const allTranslations = { en: enTranslations, ar: arTranslations };
+
+export default function ContactPage({ params }) {
+  const locale = params.locale || 'en';
+  const t = allTranslations[locale] || allTranslations.en;
+  const isRTL = locale === 'ar';
+
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '', type: 'general' });
   const [status, setStatus] = useState({ loading: false, success: false, error: '' });
 
@@ -41,18 +47,18 @@ export default function ContactPage() {
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-lg shadow-md flex items-start gap-4">
                 <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center"><FaMapMarkerAlt className="text-gold text-xl" /></div>
-                <div><h3 className="font-semibold text-deep-brown">Address</h3><p className="text-warm-gray">{t.footer.address}</p></div>
+                <div><h3 className="font-semibold text-deep-brown">{isRTL ? 'العنوان' : 'Address'}</h3><p className="text-warm-gray">{t.footer.address}</p></div>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md flex items-start gap-4">
                 <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center"><FaPhone className="text-gold text-xl" /></div>
-                <div><h3 className="font-semibold text-deep-brown">Phone</h3><p className="text-warm-gray">{t.footer.phone}</p></div>
+                <div><h3 className="font-semibold text-deep-brown">{isRTL ? 'الهاتف' : 'Phone'}</h3><p className="text-warm-gray">{t.footer.phone}</p></div>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md flex items-start gap-4">
                 <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center"><FaEnvelope className="text-gold text-xl" /></div>
-                <div><h3 className="font-semibold text-deep-brown">Email</h3><p className="text-warm-gray">{t.footer.email}</p></div>
+                <div><h3 className="font-semibold text-deep-brown">{isRTL ? 'البريد الإلكتروني' : 'Email'}</h3><p className="text-warm-gray">{t.footer.email}</p></div>
               </div>
               <a href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`} target="_blank" className="flex items-center justify-center gap-3 bg-green-500 text-white py-4 px-6 rounded-lg text-lg font-medium hover:bg-green-600 transition-colors">
-                <FaWhatsapp size={24} /> Chat on WhatsApp
+                <FaWhatsapp size={24} /> {isRTL ? 'تواصل عبر واتساب' : 'Chat on WhatsApp'}
               </a>
             </div>
 
@@ -68,13 +74,15 @@ export default function ContactPage() {
                     <div><label className="block text-sm font-medium text-deep-brown mb-2">{t.contact.email} *</label><input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="input-field" /></div>
                   </div>
                   <div><label className="block text-sm font-medium text-deep-brown mb-2">{t.contact.phone}</label><input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="input-field" /></div>
-                  <div><label className="block text-sm font-medium text-deep-brown mb-2">Request Type</label>
+                  <div><label className="block text-sm font-medium text-deep-brown mb-2">{isRTL ? 'نوع الطلب' : 'Request Type'}</label>
                     <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="input-field">
-                      <option value="general">General Inquiry</option><option value="quotation">Quotation Request</option><option value="support">Support</option>
+                      <option value="general">{isRTL ? 'استفسار عام' : 'General Inquiry'}</option>
+                      <option value="quotation">{isRTL ? 'طلب عرض سعر' : 'Quotation Request'}</option>
+                      <option value="support">{isRTL ? 'الدعم الفني' : 'Support'}</option>
                     </select>
                   </div>
                   <div><label className="block text-sm font-medium text-deep-brown mb-2">{t.contact.message} *</label><textarea required rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="input-field"></textarea></div>
-                  <button type="submit" disabled={status.loading} className="btn-primary w-full">{status.loading ? 'Sending...' : t.contact.submit}</button>
+                  <button type="submit" disabled={status.loading} className="btn-primary w-full">{status.loading ? (isRTL ? 'جاري الإرسال...' : 'Sending...') : t.contact.submit}</button>
                 </form>
               </div>
             </div>
