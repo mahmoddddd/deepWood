@@ -42,9 +42,9 @@ export default function Header({ locale, translations }) {
             <Image
               src="/images/logo.png"
               alt="Deep Wood"
-              width={120}
-              height={50}
-              className="h-12 w-auto"
+              width={180}
+              height={70}
+              className="h-16 w-auto"
               priority
             />
           </Link>
