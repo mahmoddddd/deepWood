@@ -28,7 +28,7 @@ export default function Footer({ locale, translations }) {
               <a href="#" className="text-gray-400 hover:text-gold transition-colors"><FaFacebook size={20} /></a>
               <a href="#" className="text-gray-400 hover:text-gold transition-colors"><FaInstagram size={20} /></a>
               <a href="#" className="text-gray-400 hover:text-gold transition-colors"><FaTwitter size={20} /></a>
-              <a href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`} className="text-gray-400 hover:text-gold transition-colors"><FaWhatsapp size={20} /></a>
+              <a href="https://wa.me/201020883895" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><FaWhatsapp size={20} /></a>
             </div>
           </div>
 

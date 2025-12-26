@@ -636,7 +636,7 @@ export default async function HomePage({ params }) {
                       </div>
                       <div>
                         <div className="font-semibold text-gold mb-1">{isRTL ? 'الهاتف' : 'Phone'}</div>
-                        <div className="text-beige/80" dir="ltr">+20 123 456 7890</div>
+                        <a href="tel:+201020883895" className="text-beige/80 hover:text-gold transition-colors" dir="ltr">+20 10 20883895</a>
                       </div>
                     </div>
 
