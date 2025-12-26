@@ -5,6 +5,9 @@ import enTranslations from '@/locales/en/common.json';
 import arTranslations from '@/locales/ar/common.json';
 import GallerySection from '@/components/GallerySection';
 import HeroImage from '@/components/HeroImage';
+import StatsSection from '@/components/StatsSection';
+import FAQSection from '@/components/FAQSection';
+import BeforeAfterSection from '@/components/BeforeAfterSection';
 
 const allTranslations = { en: enTranslations, ar: arTranslations };
 
@@ -214,64 +217,8 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
-      {/* Statistics Section */}
-      <section className="py-24 bg-gradient-to-br from-matte-black via-deep-brown to-matte-black text-white relative overflow-hidden">
-        {/* Decorative Background */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gold/5 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="container-custom relative z-10">
-          <div className="text-center mb-16">
-            <div className="gold-line mx-auto mb-6"></div>
-            <h2 className="text-4xl md:text-6xl font-bold mb-4">
-              <span className="gradient-text">{isRTL ? 'إنجازاتنا بالأرقام' : 'Our Achievements'}</span>
-            </h2>
-            <p className="text-beige text-xl max-w-2xl mx-auto">
-              {isRTL ? 'أرقام تتحدث عن جودة أعمالنا وثقة عملائنا' : 'Numbers that speak to our quality and client trust'}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Years of Experience */}
-            <div className="stat-card fade-in-up stagger-1">
-              <div className="relative z-10">
-                <div className="text-5xl mb-4 icon-bounce">🏆</div>
-                <div className="stat-number">25+</div>
-                <div className="text-beige text-lg mt-2">{isRTL ? 'سنة خبرة' : 'Years Experience'}</div>
-              </div>
-            </div>
-
-            {/* Completed Projects */}
-            <div className="stat-card fade-in-up stagger-2">
-              <div className="relative z-10">
-                <div className="text-5xl mb-4 icon-bounce">🏠</div>
-                <div className="stat-number">500+</div>
-                <div className="text-beige text-lg mt-2">{isRTL ? 'مشروع منجز' : 'Projects Done'}</div>
-              </div>
-            </div>
-
-            {/* Happy Clients */}
-            <div className="stat-card fade-in-up stagger-3">
-              <div className="relative z-10">
-                <div className="text-5xl mb-4 icon-bounce">😊</div>
-                <div className="stat-number">1200+</div>
-                <div className="text-beige text-lg mt-2">{isRTL ? 'عميل سعيد' : 'Happy Clients'}</div>
-              </div>
-            </div>
-
-            {/* Corporate Partners */}
-            <div className="stat-card fade-in-up stagger-4">
-              <div className="relative z-10">
-                <div className="text-5xl mb-4 icon-bounce">🤝</div>
-                <div className="stat-number">50+</div>
-                <div className="text-beige text-lg mt-2">{isRTL ? 'شريك مؤسسي' : 'Corporate Partners'}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Statistics Section with Animated Counters */}
+      <StatsSection locale={locale} />
 
       {/* Testimonials Section */}
       <section className="py-24 bg-cream relative overflow-hidden">
@@ -371,80 +318,8 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
-      {/* Before/After Gallery */}
-      <section className="py-24 bg-beige">
-        <div className="container-custom">
-          <div className="text-center mb-16">
-            <div className="gold-line mx-auto mb-6"></div>
-            <h2 className="section-title">{isRTL ? 'قبل وبعد' : 'Before & After'}</h2>
-            <p className="section-subtitle">{isRTL ? 'شاهد التحول المذهل في أعمالنا' : 'See the stunning transformation in our work'}</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Transformation 1 */}
-            <div className="fade-in-up stagger-1">
-              <div className="comparison-slider relative h-80 md:h-96 rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 flex">
-                  <div className="w-1/2 bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center">
-                    <div className="text-center text-white">
-                      <div className="text-6xl mb-4">🏚️</div>
-                      <div className="text-xl font-bold">{isRTL ? 'قبل' : 'Before'}</div>
-                      <div className="text-sm opacity-80">{isRTL ? 'مساحة فارغة' : 'Empty Space'}</div>
-                    </div>
-                  </div>
-                  <div className="w-1/2 bg-gradient-to-br from-deep-brown to-gold flex items-center justify-center">
-                    <div className="text-center text-white">
-                      <div className="text-6xl mb-4">🏠</div>
-                      <div className="text-xl font-bold">{isRTL ? 'بعد' : 'After'}</div>
-                      <div className="text-sm opacity-80">{isRTL ? 'غرفة معيشة فاخرة' : 'Luxury Living Room'}</div>
-                    </div>
-                  </div>
-                </div>
-                {/* Divider Line */}
-                <div className="absolute top-0 bottom-0 left-1/2 w-1 bg-gold z-20">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-gold rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-deep-brown font-bold">↔</span>
-                  </div>
-                </div>
-              </div>
-              <div className="text-center mt-4">
-                <h3 className="font-bold text-deep-brown text-xl">{isRTL ? 'تجديد غرفة المعيشة' : 'Living Room Renovation'}</h3>
-              </div>
-            </div>
-
-            {/* Transformation 2 */}
-            <div className="fade-in-up stagger-2">
-              <div className="comparison-slider relative h-80 md:h-96 rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 flex">
-                  <div className="w-1/2 bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center">
-                    <div className="text-center text-white">
-                      <div className="text-6xl mb-4">📦</div>
-                      <div className="text-xl font-bold">{isRTL ? 'قبل' : 'Before'}</div>
-                      <div className="text-sm opacity-80">{isRTL ? 'مكتب قديم' : 'Old Office'}</div>
-                    </div>
-                  </div>
-                  <div className="w-1/2 bg-gradient-to-br from-matte-black to-deep-brown flex items-center justify-center">
-                    <div className="text-center text-white">
-                      <div className="text-6xl mb-4">🏢</div>
-                      <div className="text-xl font-bold">{isRTL ? 'بعد' : 'After'}</div>
-                      <div className="text-sm opacity-80">{isRTL ? 'مكتب عصري' : 'Modern Office'}</div>
-                    </div>
-                  </div>
-                </div>
-                {/* Divider Line */}
-                <div className="absolute top-0 bottom-0 left-1/2 w-1 bg-gold z-20">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-gold rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-deep-brown font-bold">↔</span>
-                  </div>
-                </div>
-              </div>
-              <div className="text-center mt-4">
-                <h3 className="font-bold text-deep-brown text-xl">{isRTL ? 'تجهيز مكتب شركة' : 'Corporate Office Setup'}</h3>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Before/After Interactive Comparison */}
+      <BeforeAfterSection locale={locale} />
 
       {/* Video Showcase Section */}
       <section className="py-24 bg-gradient-to-br from-deep-brown to-matte-black relative overflow-hidden">
@@ -488,103 +363,8 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-24 bg-cream">
-        <div className="container-custom">
-          <div className="text-center mb-16">
-            <div className="gold-line mx-auto mb-6"></div>
-            <h2 className="section-title">{isRTL ? 'الأسئلة الشائعة' : 'Frequently Asked Questions'}</h2>
-            <p className="section-subtitle">{isRTL ? 'إجابات على أكثر الأسئلة شيوعاً' : 'Answers to the most common questions'}</p>
-          </div>
-
-          <div className="max-w-3xl mx-auto">
-            {/* FAQ 1 */}
-            <div className="faq-item fade-in-up stagger-1">
-              <div className="faq-question">
-                <span>{isRTL ? 'ما هي مدة تنفيذ المشروع؟' : 'What is the project execution time?'}</span>
-                <div className="faq-icon">
-                  <span className="text-deep-brown font-bold">+</span>
-                </div>
-              </div>
-              <div className="faq-answer">
-                <p className="text-warm-gray">
-                  {isRTL
-                    ? 'تختلف مدة التنفيذ حسب حجم المشروع. المشاريع الصغيرة تستغرق من 2-4 أسابيع، بينما المشاريع الكبيرة قد تستغرق 2-3 أشهر.'
-                    : 'Execution time varies by project size. Small projects take 2-4 weeks, while larger projects may take 2-3 months.'}
-                </p>
-              </div>
-            </div>
-
-            {/* FAQ 2 */}
-            <div className="faq-item fade-in-up stagger-2">
-              <div className="faq-question">
-                <span>{isRTL ? 'هل تقدمون ضمان على الأثاث؟' : 'Do you offer warranty on furniture?'}</span>
-                <div className="faq-icon">
-                  <span className="text-deep-brown font-bold">+</span>
-                </div>
-              </div>
-              <div className="faq-answer">
-                <p className="text-warm-gray">
-                  {isRTL
-                    ? 'نعم، نقدم ضمان 5 سنوات على جميع منتجاتنا ضد عيوب التصنيع، مع خدمة صيانة مجانية في السنة الأولى.'
-                    : 'Yes, we offer a 5-year warranty on all our products against manufacturing defects, with free maintenance service in the first year.'}
-                </p>
-              </div>
-            </div>
-
-            {/* FAQ 3 */}
-            <div className="faq-item fade-in-up stagger-3">
-              <div className="faq-question">
-                <span>{isRTL ? 'هل يمكنكم تصميم أثاث مخصص؟' : 'Can you design custom furniture?'}</span>
-                <div className="faq-icon">
-                  <span className="text-deep-brown font-bold">+</span>
-                </div>
-              </div>
-              <div className="faq-answer">
-                <p className="text-warm-gray">
-                  {isRTL
-                    ? 'بالتأكيد! نحن متخصصون في الأثاث المخصص. فريق التصميم لدينا يعمل معك لتحويل أفكارك إلى واقع.'
-                    : 'Absolutely! We specialize in custom furniture. Our design team works with you to turn your ideas into reality.'}
-                </p>
-              </div>
-            </div>
-
-            {/* FAQ 4 */}
-            <div className="faq-item fade-in-up stagger-4">
-              <div className="faq-question">
-                <span>{isRTL ? 'ما هي طرق الدفع المتاحة؟' : 'What payment methods are available?'}</span>
-                <div className="faq-icon">
-                  <span className="text-deep-brown font-bold">+</span>
-                </div>
-              </div>
-              <div className="faq-answer">
-                <p className="text-warm-gray">
-                  {isRTL
-                    ? 'نقبل الدفع نقداً، التحويل البنكي، والدفع بالتقسيط حتى 12 شهر بدون فوائد للمشاريع الكبيرة.'
-                    : 'We accept cash, bank transfer, and installment payments up to 12 months interest-free for large projects.'}
-                </p>
-              </div>
-            </div>
-
-            {/* FAQ 5 */}
-            <div className="faq-item fade-in-up stagger-5">
-              <div className="faq-question">
-                <span>{isRTL ? 'هل تخدمون مناطق خارج القاهرة؟' : 'Do you serve areas outside Cairo?'}</span>
-                <div className="faq-icon">
-                  <span className="text-deep-brown font-bold">+</span>
-                </div>
-              </div>
-              <div className="faq-answer">
-                <p className="text-warm-gray">
-                  {isRTL
-                    ? 'نعم، نخدم جميع محافظات مصر. لدينا فريق توصيل وتركيب يصل لأي مكان.'
-                    : 'Yes, we serve all Egyptian governorates. We have a delivery and installation team that reaches anywhere.'}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* FAQ Section with Interactive Accordion */}
+      <FAQSection locale={locale} />
 
       {/* Location & Contact Section */}
       <section className="py-24 bg-white">
