@@ -4,6 +4,7 @@ import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import enTranslations from '@/locales/en/common.json';
 import arTranslations from '@/locales/ar/common.json';
 import GallerySection from '@/components/GallerySection';
+import HeroImage from '@/components/HeroImage';
 
 const allTranslations = { en: enTranslations, ar: arTranslations };
 
@@ -36,13 +37,7 @@ export default async function HomePage({ params }) {
     <>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center">
-        <Image
-          src="/images/furniture/WhatsApp Image 2025-12-20 at 12.43.13 AM.jpeg"
-          alt="Deep Wood Furniture"
-          fill
-          className="object-cover"
-          priority
-        />
+        <HeroImage />
         <div className="absolute inset-0 bg-gradient-to-r from-matte-black/90 to-deep-brown/70"></div>
         <div className="relative z-10 container-custom text-center text-white">
           <div className="gold-line mx-auto mb-6"></div>

@@ -6,6 +6,22 @@ import Image from 'next/image';
 export default function Gallery({ images = [], title, subtitle, columns = 3, showTitle = true }) {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [failedImages, setFailedImages] = useState(new Set());
+
+  // Get the image source with fallback to local if Cloudinary fails
+  const getImageSrc = (image, index) => {
+    if (failedImages.has(index) && image.localSrc) {
+      return image.localSrc;
+    }
+    return image.src;
+  };
+
+  // Handle image load error - fallback to local
+  const handleImageError = (index, image) => {
+    if (!failedImages.has(index) && image.localSrc) {
+      setFailedImages(prev => new Set([...prev, index]));
+    }
+  };
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback((e) => {
@@ -100,11 +116,12 @@ export default function Gallery({ images = [], title, subtitle, columns = 3, sho
             <div className="absolute inset-0 bg-gradient-to-br from-deep-brown/20 to-gold/10">
               {image.src ? (
                 <Image
-                  src={image.src}
+                  src={getImageSrc(image, index)}
                   alt={image.alt || `Gallery image ${index + 1}`}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  onError={() => handleImageError(index, image)}
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-beige to-cream flex items-center justify-center">
@@ -190,13 +207,14 @@ export default function Gallery({ images = [], title, subtitle, columns = 3, sho
 
             {displayImages[selectedIndex]?.src ? (
               <Image
-                src={displayImages[selectedIndex].src}
+                src={getImageSrc(displayImages[selectedIndex], selectedIndex)}
                 alt={displayImages[selectedIndex].alt || 'Gallery image'}
                 fill
                 className="object-contain"
                 sizes="100vw"
                 priority
                 onLoadingComplete={() => setIsLoading(false)}
+                onError={() => handleImageError(selectedIndex, displayImages[selectedIndex])}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
@@ -233,11 +251,12 @@ export default function Gallery({ images = [], title, subtitle, columns = 3, sho
               >
                 {image.src ? (
                   <Image
-                    src={image.src}
+                    src={getImageSrc(image, index)}
                     alt={`Thumbnail ${index + 1}`}
                     width={64}
                     height={64}
                     className="w-full h-full object-cover"
+                    onError={() => handleImageError(index, image)}
                   />
                 ) : (
                   <div className="w-full h-full bg-beige flex items-center justify-center text-xl">
