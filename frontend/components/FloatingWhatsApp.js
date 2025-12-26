@@ -5,7 +5,7 @@ import { FaWhatsapp, FaTimes } from 'react-icons/fa';
 
 // WhatsApp number for Deep Wood
 const WHATSAPP_NUMBER = '+201020883895';
-const OWNER_NAME = 'Deep Wood';
+const OWNER_NAME = 'DeepWood';
 
 export default function FloatingWhatsApp({ locale = 'en' }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,8 +22,8 @@ export default function FloatingWhatsApp({ locale = 'en' }) {
 
   // Default welcome message
   const defaultMessage = isRTL
-    ? 'مرحباً، أود الاستفسار عن خدمات Deep Wood للأثاث الخشبي الفاخر.'
-    : 'Hello, I would like to inquire about Deep Wood premium furniture services.';
+    ? 'مرحباً، أود الاستفسار عن خدمات DeepWood للأثاث الخشبي الفاخر.'
+    : 'Hello, I would like to inquire about DeepWood premium furniture services.';
 
   const handleSendMessage = () => {
     const textMessage = message || defaultMessage;
