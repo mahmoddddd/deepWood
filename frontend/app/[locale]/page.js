@@ -9,6 +9,7 @@ import StatsSection from '@/components/StatsSection';
 import FAQSection from '@/components/FAQSection';
 import BeforeAfterSection from '@/components/BeforeAfterSection';
 import PartnersSection from '@/components/PartnersSection';
+import PortfolioSection from '@/components/PortfolioSection';
 
 const allTranslations = { en: enTranslations, ar: arTranslations };
 
@@ -142,6 +143,9 @@ export default async function HomePage({ params }) {
 
       {/* Corporate Partners - Clean & Professional */}
       <PartnersSection locale={locale} />
+
+      {/* Portfolio - Corporate & Residential */}
+      <PortfolioSection locale={locale} />
 
       {/* Statistics Section with Animated Counters */}
       <StatsSection locale={locale} />
