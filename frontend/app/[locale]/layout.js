@@ -3,6 +3,7 @@ import Footer from '@/components/layout/Footer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import ScrollToTop from '@/components/ScrollToTop';
 import AnnouncementBar from '@/components/AnnouncementBar';
+import LoadingScreen from '@/components/LoadingScreen';
 import enTranslations from '@/locales/en/common.json';
 import arTranslations from '@/locales/ar/common.json';
 
@@ -30,6 +31,7 @@ export default function LocaleLayout({ children, params }) {
   return (
     <html lang={locale} dir={isRTL ? 'rtl' : 'ltr'}>
       <body className={isRTL ? 'font-cairo' : 'font-inter'}>
+        <LoadingScreen />
         <AnnouncementBar locale={locale} />
         <Header locale={locale} translations={t} />
         <main className="min-h-screen">{children}</main>

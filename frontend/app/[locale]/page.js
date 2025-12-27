@@ -8,6 +8,7 @@ import HeroImage from '@/components/HeroImage';
 import StatsSection from '@/components/StatsSection';
 import FAQSection from '@/components/FAQSection';
 import BeforeAfterSection from '@/components/BeforeAfterSection';
+import PartnersSection from '@/components/PartnersSection';
 
 const allTranslations = { en: enTranslations, ar: arTranslations };
 
@@ -139,83 +140,8 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
-      {/* Corporate Partners - Premium Section */}
-      <section className="py-24 bg-gradient-to-br from-deep-brown via-matte-black to-deep-brown text-white relative overflow-hidden">
-        {/* Background Decorative Elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-gold rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-gold rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="container-custom relative z-10">
-          <div className="text-center mb-16">
-            <div className="gold-line mx-auto mb-6"></div>
-            <h2 className="text-4xl md:text-6xl font-bold mb-4 fade-in-up">
-              <span className="gradient-text">{t.clients.title}</span>
-            </h2>
-            <p className="text-beige text-xl max-w-2xl mx-auto fade-in-up delay-200">{t.clients.subtitle}</p>
-          </div>
-
-          {/* Partners Grid with Animation */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {/* Toyota */}
-            <div className="partner-card fade-in-up delay-100 pulse-glow">
-              <div className="w-32 h-20 relative flex items-center justify-center">
-                <svg className="w-28 h-20 partner-logo" viewBox="0 0 200 80" fill="currentColor">
-                  {/* Toyota Logo - Stylized Ellipses */}
-                  <ellipse cx="100" cy="40" rx="90" ry="35" fill="none" stroke="currentColor" strokeWidth="4"/>
-                  <ellipse cx="100" cy="40" rx="55" ry="20" fill="none" stroke="currentColor" strokeWidth="3"/>
-                  <ellipse cx="100" cy="40" rx="25" ry="8" fill="none" stroke="currentColor" strokeWidth="2"/>
-                  <line x1="100" y1="5" x2="100" y2="75" stroke="currentColor" strokeWidth="3"/>
-                </svg>
-              </div>
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-gold mb-2">{isRTL ? 'تويوتا' : 'Toyota'}</h3>
-                <p className="text-beige/70 text-sm">{isRTL ? 'شريك استراتيجي' : 'Strategic Partner'}</p>
-              </div>
-              <div className="w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent mt-4 shimmer overflow-hidden rounded"></div>
-            </div>
-
-            {/* Raya */}
-            <div className="partner-card fade-in-up delay-300 pulse-glow">
-              <div className="w-32 h-20 relative flex items-center justify-center">
-                <svg className="w-28 h-16 partner-logo" viewBox="0 0 200 60" fill="currentColor">
-                  <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fontSize="36" fontWeight="bold" fill="currentColor">RAYA</text>
-                </svg>
-              </div>
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-gold mb-2">{isRTL ? 'راية' : 'Raya'}</h3>
-                <p className="text-beige/70 text-sm">{isRTL ? 'شريك تقني' : 'Technology Partner'}</p>
-              </div>
-              <div className="w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent mt-4 shimmer overflow-hidden rounded"></div>
-            </div>
-
-            {/* Toshiba */}
-            <div className="partner-card fade-in-up delay-500 pulse-glow">
-              <div className="w-32 h-20 relative flex items-center justify-center">
-                <svg className="w-28 h-16 partner-logo" viewBox="0 0 200 60" fill="currentColor">
-                  <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fontSize="28" fontWeight="bold" fill="currentColor">TOSHIBA</text>
-                </svg>
-              </div>
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-gold mb-2">{isRTL ? 'توشيبا العربي' : 'Toshiba El Araby'}</h3>
-                <p className="text-beige/70 text-sm">{isRTL ? 'شريك صناعي' : 'Industrial Partner'}</p>
-              </div>
-              <div className="w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent mt-4 shimmer overflow-hidden rounded"></div>
-            </div>
-          </div>
-
-          {/* Trust Badge */}
-          <div className="text-center fade-in-up delay-600">
-            <div className="inline-flex items-center gap-4 bg-white/5 backdrop-blur-sm px-8 py-4 rounded-full border border-gold/20">
-              <span className="text-gold text-3xl">🏆</span>
-              <span className="text-beige text-lg font-medium">
-                {isRTL ? 'موثوق به من قبل أكبر الشركات في مصر' : 'Trusted by Egypt\'s Leading Companies'}
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Corporate Partners - Clean & Professional */}
+      <PartnersSection locale={locale} />
 
       {/* Statistics Section with Animated Counters */}
       <StatsSection locale={locale} />
