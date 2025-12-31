@@ -228,7 +228,7 @@ export default function ProductDetailsClient({ product, locale = 'en' }) {
 
               {/* WhatsApp Button */}
               <a
-                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '201020883895'}?text=I'm interested in: ${title} - Price: ${price} EGP`}
+                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '201020883895'}?text=I'm interested in: ${title} - Price: ${effectivePrice} EGP`}
                 target="_blank"
                 rel="noreferrer"
                 className="w-full flex items-center justify-center gap-2 py-3 border-2 border-green-500 text-green-600 font-bold rounded-lg hover:bg-green-50 transition-colors"
