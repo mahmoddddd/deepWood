@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
+import { useSettings } from '@/context/SettingsContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -13,6 +14,7 @@ export default function CheckoutPage({ params }) {
   const router = useRouter();
 
   const { cartItems, totalPrice, clearCart } = useCart();
+  const { settings } = useSettings();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -29,12 +31,47 @@ export default function CheckoutPage({ params }) {
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState(null);
 
-  const shippingCost = 0; // Free shipping for now
-  const finalTotal = totalPrice + shippingCost;
+  // Coupon State
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponError, setCouponError] = useState('');
+  const [isCheckingCoupon, setIsCheckingCoupon] = useState(false);
+
+  const shippingCost = settings?.shippingCost || 0;
+  const discountAmount = appliedCoupon ? appliedCoupon.calculatedDiscount : 0;
+  const finalTotal = Math.max(0, totalPrice + shippingCost - discountAmount);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setIsCheckingCoupon(true);
+    setCouponError('');
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/coupons/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode, orderTotal: totalPrice })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setAppliedCoupon(data.data);
+        setCouponCode('');
+      } else {
+        setCouponError(data.error);
+        setAppliedCoupon(null);
+      }
+    } catch (error) {
+       console.error('Coupon Error:', error);
+       setCouponError('Failed to validate coupon');
+    } finally {
+       setIsCheckingCoupon(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -63,6 +100,8 @@ export default function CheckoutPage({ params }) {
         })),
         subtotal: totalPrice,
         shippingCost,
+        discount: discountAmount,
+        couponCode: appliedCoupon?.code,
         total: finalTotal,
         paymentMethod: 'whatsapp',
         customerNotes: formData.notes,
@@ -90,7 +129,7 @@ export default function CheckoutPage({ params }) {
           : `Hello Deep Wood, I just placed a new order #${data.data.orderNumber}.\nName: ${orderData.customerName}\nTotal: ${finalTotal} EGP`;
 
         // Redirect to WhatsApp in a new tab
-        window.open(`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '201020883895'}?text=${encodeURIComponent(message)}`, '_blank');
+        window.open(`https://wa.me/${settings?.whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '201020883895'}?text=${encodeURIComponent(message)}`, '_blank');
       } else {
         alert('Something went wrong. Please try again.');
       }
@@ -289,7 +328,22 @@ export default function CheckoutPage({ params }) {
                     </div>
                     <div className="flex-1">
                       <h4 className="text-sm font-medium text-deep-brown line-clamp-2">{isRTL ? item.product.title_ar : item.product.title_en}</h4>
-                      <p className="text-xs text-gray-500">{item.quantity} x {item.price.toLocaleString()} EGP</p>
+                      {/* Variant Display */}
+                      {item.selectedVariant && (
+                          <div className="text-xs text-gray-500 mt-0.5">
+                             {item.selectedVariant.color && (
+                                <span className="mr-1 after:content-['|'] after:mr-1 after:text-gray-300 last:after:content-none">
+                                   {isRTL ? item.selectedVariant.color.name_ar : item.selectedVariant.color.name_en}
+                                </span>
+                             )}
+                             {item.selectedVariant.size && (
+                                <span>
+                                  {isRTL ? item.selectedVariant.size.dimensions_ar : item.selectedVariant.size.dimensions_en}
+                                </span>
+                             )}
+                          </div>
+                      )}
+                      <p className="text-xs text-gray-500 mt-1">{item.quantity} x {item.price.toLocaleString()} EGP</p>
                     </div>
                     <div className="font-bold text-sm">
                       {(item.price * item.quantity).toLocaleString()} EGP
@@ -299,10 +353,57 @@ export default function CheckoutPage({ params }) {
               </div>
 
               <div className="space-y-2 pt-4 border-t border-gray-100 mb-6">
+
+               {/* Coupon Section */}
+               <div className="mb-4">
+                  {!appliedCoupon ? (
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            value={couponCode}
+                            onChange={(e) => setCouponCode(e.target.value)}
+                            placeholder={isRTL ? 'كود الخصم' : 'Coupon Code'}
+                            className="flex-1 px-3 py-2 border rounded-lg text-sm uppercase font-mono"
+                        />
+                         <button
+                            type="button"
+                            onClick={handleApplyCoupon}
+                            disabled={isCheckingCoupon || !couponCode}
+                            className="bg-deep-brown text-white px-4 py-2 rounded-lg text-sm hover:bg-gold disabled:opacity-50"
+                         >
+                            {isCheckingCoupon ? '...' : (isRTL ? 'تطبيق' : 'Apply')}
+                         </button>
+                    </div>
+                  ) : (
+                    <div className="flex justify-between items-center bg-green-50 p-2 rounded-lg border border-green-200">
+                        <span className="text-sm text-green-700 font-medium">
+                            {isRTL ? 'تم تطبيق الكوبون:' : 'Coupon Applied:'} <strong>{appliedCoupon.code}</strong>
+                        </span>
+                        <button
+                            type="button"
+                            onClick={() => { setAppliedCoupon(null); setCouponCode(''); }}
+                            className="text-red-500 hover:text-red-700 text-xs underline"
+                        >
+                            {isRTL ? 'إزالة' : 'Remove'}
+                        </button>
+                    </div>
+                  )}
+                  {couponError && <p className="text-red-500 text-xs mt-1">{couponError}</p>}
+               </div>
+
                 <div className="flex justify-between text-gray-600">
                    <span>{isRTL ? 'المجموع الفرعي' : 'Subtotal'}</span>
                    <span>{totalPrice.toLocaleString()} EGP</span>
                 </div>
+
+                {/* Discount Display */}
+                {appliedCoupon && (
+                   <div className="flex justify-between text-green-600 font-medium">
+                       <span>{isRTL ? 'خصم' : 'Discount'} ({appliedCoupon.code})</span>
+                       <span>- {discountAmount.toLocaleString()} EGP</span>
+                   </div>
+                )}
+
                 <div className="flex justify-between text-gray-600">
                    <span>{isRTL ? 'الشحن' : 'Shipping'}</span>
                    <span className="text-green-600 font-medium">{isRTL ? 'مجاني' : 'Free'}</span>

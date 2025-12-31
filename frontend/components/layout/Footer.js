@@ -1,7 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 import { FaFacebook, FaInstagram, FaTwitter, FaWhatsapp, FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
+import { useSettings } from '@/context/SettingsContext';
 
 export default function Footer({ locale, translations }) {
+  const { settings } = useSettings();
   const t = translations.footer;
   const nav = translations.nav;
 
@@ -21,14 +25,14 @@ export default function Footer({ locale, translations }) {
           {/* Brand */}
           <div>
             <Link href={`/${locale}`} className="inline-block mb-4">
-              <span className="text-2xl font-bold">Deep<span className="text-gold">Wood</span></span>
+              <span className="text-2xl font-bold">{settings?.storeName || 'Deep Wood'}</span>
             </Link>
             <p className="text-gray-400 mb-6">{t.description}</p>
             <div className="flex gap-4">
-              <a href="#" className="text-gray-400 hover:text-gold transition-colors"><FaFacebook size={20} /></a>
-              <a href="#" className="text-gray-400 hover:text-gold transition-colors"><FaInstagram size={20} /></a>
-              <a href="#" className="text-gray-400 hover:text-gold transition-colors"><FaTwitter size={20} /></a>
-              <a href="https://wa.me/201020883895" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><FaWhatsapp size={20} /></a>
+              {settings?.socialLinks?.facebook && <a href={settings.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><FaFacebook size={20} /></a>}
+              {settings?.socialLinks?.instagram && <a href={settings.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><FaInstagram size={20} /></a>}
+              {settings?.socialLinks?.twitter && <a href={settings.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><FaTwitter size={20} /></a>}
+              {settings?.whatsappNumber && <a href={`https://wa.me/${settings.whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><FaWhatsapp size={20} /></a>}
             </div>
           </div>
 
@@ -50,15 +54,15 @@ export default function Footer({ locale, translations }) {
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-gray-400">
                 <FaMapMarkerAlt className="text-gold" />
-                <span>{t.address}</span>
+                <span>{settings?.address || t.address}</span>
               </li>
               <li className="flex items-center gap-3 text-gray-400">
                 <FaPhone className="text-gold" />
-                <span>{t.phone}</span>
+                <span>{settings?.contactPhone || t.phone}</span>
               </li>
               <li className="flex items-center gap-3 text-gray-400">
                 <FaEnvelope className="text-gold" />
-                <span>{t.email}</span>
+                <span>{settings?.contactEmail || t.email}</span>
               </li>
             </ul>
           </div>

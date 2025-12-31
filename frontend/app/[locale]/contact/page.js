@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
+import { useSettings } from '@/context/SettingsContext';
 import enTranslations from '@/locales/en/common.json';
 import arTranslations from '@/locales/ar/common.json';
 
@@ -11,22 +12,26 @@ export default function ContactPage({ params }) {
   const t = allTranslations[locale] || allTranslations.en;
   const isRTL = locale === 'ar';
 
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '', type: 'general' });
+  const { settings } = useSettings();
+
+  const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [status, setStatus] = useState({ loading: false, success: false, error: '' });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ loading: true, success: false, error: '' });
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contacts`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form),
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/contacts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
       });
       if (res.ok) {
         setStatus({ loading: false, success: true, error: '' });
-        setForm({ name: '', email: '', phone: '', message: '', type: 'general' });
+        setForm({ name: '', email: '', phone: '', subject: '', message: '' });
       } else throw new Error('Failed to submit');
     } catch (err) {
-      setStatus({ loading: false, success: false, error: t.contact.error });
+      setStatus({ loading: false, success: false, error: t.contact.error || 'Failed to send message' });
     }
   };
 
@@ -47,17 +52,17 @@ export default function ContactPage({ params }) {
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-lg shadow-md flex items-start gap-4">
                 <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center"><FaMapMarkerAlt className="text-gold text-xl" /></div>
-                <div><h3 className="font-semibold text-deep-brown">{isRTL ? 'العنوان' : 'Address'}</h3><p className="text-warm-gray">{t.footer.address}</p></div>
+                <div><h3 className="font-semibold text-deep-brown">{isRTL ? 'العنوان' : 'Address'}</h3><p className="text-warm-gray">{settings?.address || t.footer.address}</p></div>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md flex items-start gap-4">
                 <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center"><FaPhone className="text-gold text-xl" /></div>
-                <div><h3 className="font-semibold text-deep-brown">{isRTL ? 'الهاتف' : 'Phone'}</h3><p className="text-warm-gray">{t.footer.phone}</p></div>
+                <div><h3 className="font-semibold text-deep-brown">{isRTL ? 'الهاتف' : 'Phone'}</h3><p className="text-warm-gray">{settings?.contactPhone || t.footer.phone}</p></div>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md flex items-start gap-4">
                 <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center"><FaEnvelope className="text-gold text-xl" /></div>
-                <div><h3 className="font-semibold text-deep-brown">{isRTL ? 'البريد الإلكتروني' : 'Email'}</h3><p className="text-warm-gray">{t.footer.email}</p></div>
+                <div><h3 className="font-semibold text-deep-brown">{isRTL ? 'البريد الإلكتروني' : 'Email'}</h3><p className="text-warm-gray">{settings?.contactEmail || t.footer.email}</p></div>
               </div>
-              <a href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`} target="_blank" className="flex items-center justify-center gap-3 bg-green-500 text-white py-4 px-6 rounded-lg text-lg font-medium hover:bg-green-600 transition-colors">
+              <a href={`https://wa.me/${settings?.whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`} target="_blank" className="flex items-center justify-center gap-3 bg-green-500 text-white py-4 px-6 rounded-lg text-lg font-medium hover:bg-green-600 transition-colors">
                 <FaWhatsapp size={24} /> {isRTL ? 'تواصل عبر واتساب' : 'Chat on WhatsApp'}
               </a>
             </div>
@@ -74,13 +79,7 @@ export default function ContactPage({ params }) {
                     <div><label className="block text-sm font-medium text-deep-brown mb-2">{t.contact.email} *</label><input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="input-field" /></div>
                   </div>
                   <div><label className="block text-sm font-medium text-deep-brown mb-2">{t.contact.phone}</label><input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="input-field" /></div>
-                  <div><label className="block text-sm font-medium text-deep-brown mb-2">{isRTL ? 'نوع الطلب' : 'Request Type'}</label>
-                    <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="input-field">
-                      <option value="general">{isRTL ? 'استفسار عام' : 'General Inquiry'}</option>
-                      <option value="quotation">{isRTL ? 'طلب عرض سعر' : 'Quotation Request'}</option>
-                      <option value="support">{isRTL ? 'الدعم الفني' : 'Support'}</option>
-                    </select>
-                  </div>
+                  <div><label className="block text-sm font-medium text-deep-brown mb-2">{t.contact.subject || (isRTL ? 'الموضوع' : 'Subject')} *</label><input type="text" required value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className="input-field" /></div>
                   <div><label className="block text-sm font-medium text-deep-brown mb-2">{t.contact.message} *</label><textarea required rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="input-field"></textarea></div>
                   <button type="submit" disabled={status.loading} className="btn-primary w-full">{status.loading ? (isRTL ? 'جاري الإرسال...' : 'Sending...') : t.contact.submit}</button>
                 </form>

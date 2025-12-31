@@ -48,6 +48,10 @@ app.use('/api/clients', require('./routes/clientRoutes'));
 app.use('/api/testimonials', require('./routes/testimonialRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/contacts', require('./routes/contactRoutes'));
+app.use('/api/coupons', require('./routes/couponRoutes'));
+app.use('/api/customers', require('./routes/customerRoutes'));
+app.use('/api/settings', require('./routes/settingsRoutes'));
+app.use('/api/reviews', require('./routes/reviewRoutes'));
 
 // Error handler
 app.use(errorHandler);

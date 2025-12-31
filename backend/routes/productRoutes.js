@@ -5,6 +5,10 @@ const { protect, authorize } = require('../middlewares/authMiddleware');
 const { uploadMixed } = require('../middlewares/uploadMiddleware');
 const { validate, validationRules } = require('../middlewares/validateMiddleware');
 
+const reviewRouter = require('./reviewRoutes');
+
+router.use('/:productId/reviews', reviewRouter);
+
 router.route('/').get(getProducts).post(uploadMixed, validationRules.product, validate, createProduct);
 router.get('/featured', getFeaturedProducts);
 router.get('/slug/:slug', getProductBySlug);

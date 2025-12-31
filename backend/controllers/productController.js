@@ -154,6 +154,12 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
   if (typeof req.body.seo === 'string') {
     req.body.seo = JSON.parse(req.body.seo);
   }
+  if (typeof req.body.colors === 'string') {
+    req.body.colors = JSON.parse(req.body.colors);
+  }
+  if (typeof req.body.sizes === 'string') {
+    req.body.sizes = JSON.parse(req.body.sizes);
+  }
 
   const product = await Product.create(req.body);
 
@@ -241,6 +247,12 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
   }
   if (typeof req.body.seo === 'string') {
     req.body.seo = JSON.parse(req.body.seo);
+  }
+  if (typeof req.body.colors === 'string') {
+    req.body.colors = JSON.parse(req.body.colors);
+  }
+  if (typeof req.body.sizes === 'string') {
+    req.body.sizes = JSON.parse(req.body.sizes);
   }
 
   product = await Product.findByIdAndUpdate(req.params.id, req.body, {

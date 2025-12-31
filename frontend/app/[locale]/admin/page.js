@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { FaEdit, FaTrash, FaPlus, FaSearch, FaBoxOpen, FaImage, FaTimes, FaShoppingBag, FaEye, FaCheck, FaTags, FaChartBar, FaGlobe } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaSearch, FaBoxOpen, FaImage, FaTimes, FaShoppingBag, FaEye, FaCheck, FaTags, FaChartBar, FaGlobe, FaUsers, FaCog } from 'react-icons/fa';
 
 // Admin Translations
 const translations = {
@@ -93,6 +93,39 @@ const translations = {
     noCategories: 'No categories found. Add your first one!',
     items: 'items',
     left: 'left',
+    customers: 'Customers',
+    customerManagement: 'Customer List',
+    totalCustomers: 'Total Customers',
+    phone: 'Phone',
+    email: 'Email',
+    totalSpent: 'Total Spent',
+    lastOrder: 'Last Order',
+    settings: 'Settings',
+    generalSettings: 'General Settings',
+    storeName: 'Store Name',
+    contactInfo: 'Contact Info',
+    socialMedia: 'Social Media',
+    saveSettings: 'Save Settings',
+    shipping: 'Shipping Cost',
+    coupons: 'Coupons',
+    couponManagement: 'Coupon Management',
+    addCoupon: 'Add Coupon',
+    code: 'Code',
+    discount: 'Discount',
+    validUntil: 'Valid Until',
+    usage: 'Usage',
+    saveCoupon: 'Save Coupon',
+    createCoupon: 'Create New Coupon',
+    editCoupon: 'Edit Coupon',
+    discountValue: 'Discount Value',
+    discountType: 'Discount Type',
+    percentage: 'Percentage',
+    fixedAmount: 'Fixed Amount',
+    minOrder: 'Min Order Amount',
+    maxDiscount: 'Max Discount',
+    usageLimit: 'Usage Limit',
+    totalCoupons: 'Total Coupons',
+    noCoupons: 'No coupons found. Add your first one!',
   },
   ar: {
     login: 'تسجيل دخول المدير',
@@ -102,14 +135,31 @@ const translations = {
     products: 'المنتجات',
     categories: 'الأقسام',
     orders: 'الطلبات',
+    customers: 'العملاء',
+    customerManagement: 'قائمة العملاء',
+    totalCustomers: 'إجمالي العملاء',
+    phone: 'الهاتف',
+    email: 'البريد',
+    totalSpent: 'إجمالي الإنفاق',
+    lastOrder: 'آخر طلب',
+    settings: 'الإعدادات',
+    generalSettings: 'الإعدادات العامة',
+    storeName: 'اسم المتجر',
+    contactInfo: 'معلومات التواصل',
+    socialMedia: 'التواصل الاجتماعي',
+    saveSettings: 'حفظ الإعدادات',
+    shipping: 'تكلفة الشحن',
+    coupons: 'الكوبونات',
     totalProducts: 'إجمالي المنتجات',
     totalCategories: 'الأقسام',
     totalOrders: 'إجمالي الطلبات',
+    totalCoupons: 'الكوبونات',
     totalRevenue: 'إجمالي الإيرادات',
     recentOrders: 'آخر الطلبات',
     lowStock: 'منتجات قليلة المخزون',
     allInStock: 'جميع المنتجات متوفرة! ✅',
     noOrders: 'لا توجد طلبات بعد',
+    noCoupons: 'لا توجد كوبونات. أضف أول كوبون!',
     orderNumber: 'طلب #',
     customer: 'العميل',
     total: 'الإجمالي',
@@ -117,7 +167,9 @@ const translations = {
     date: 'التاريخ',
     actions: 'الإجراءات',
     productManagement: 'إدارة المنتجات',
+    couponManagement: 'إدارة الكوبونات',
     addProduct: 'إضافة منتج جديد',
+    addCoupon: 'إضافة كوبون',
     cancel: 'إلغاء',
     edit: 'تعديل',
     delete: 'حذف',
@@ -145,9 +197,12 @@ const translations = {
     newArrival: 'وصل حديثاً',
     featured: 'مميز',
     saveProduct: 'حفظ المنتج',
+    saveCoupon: 'حفظ الكوبون',
     saving: 'جاري الحفظ...',
     createProduct: 'إنشاء منتج جديد',
+    createCoupon: 'إنشاء كوبون جديد',
     editProduct: 'تعديل المنتج',
+    editCoupon: 'تعديل الكوبون',
     categoryManagement: 'الأقسام',
     addCategory: 'إضافة قسم',
     nameEn: 'الاسم (إنجليزي)',
@@ -160,11 +215,22 @@ const translations = {
     refreshOrders: 'تحديث الطلبات',
     customerInfo: 'معلومات العميل',
     name: 'الاسم',
+    code: 'الكود',
     email: 'البريد الإلكتروني',
     phone: 'الهاتف',
     shippingAddress: 'عنوان الشحن',
     orderItems: 'المنتجات المطلوبة',
     subtotal: 'المجموع الفرعي',
+    discount: 'الخصم',
+    discountValue: 'قيمة الخصم',
+    discountType: 'نوع الخصم',
+    percentage: 'نسبة مئوية',
+    fixedAmount: 'مبلغ ثابت',
+    minOrder: 'أقل مبلغ للطلب',
+    maxDiscount: 'أقصى خصم',
+    usageLimit: 'حد الاستخدام',
+    validUntil: 'صالح حتى',
+    usage: 'الاستخدام',
     shipping: 'الشحن',
     updateStatus: 'تحديث الحالة',
     notes: 'ملاحظات',
@@ -180,7 +246,7 @@ const translations = {
     noCategories: 'لا توجد أقسام. أضف أول قسم!',
     items: 'منتجات',
     left: 'متبقي',
-  }
+  },
 };
 
 export default function AdminPage({ params }) {
@@ -210,6 +276,123 @@ export default function AdminPage({ params }) {
   const [editingCategory, setEditingCategory] = useState(null);
   const [categoryView, setCategoryView] = useState('list');
 
+  // Coupons State
+  const [coupons, setCoupons] = useState([]);
+  const [couponsLoading, setCouponsLoading] = useState(false);
+  const [editingCoupon, setEditingCoupon] = useState(null);
+  const [couponView, setCouponView] = useState('list');
+
+  // Customers State
+  const [customers, setCustomers] = useState([]);
+  const [customersLoading, setCustomersLoading] = useState(false);
+
+  const fetchCustomers = async () => {
+    setCustomersLoading(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/customers`);
+      const data = await res.json();
+      if (data.success) {
+        setCustomers(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch customers:', error);
+    } finally {
+        setCustomersLoading(false);
+    }
+  };
+
+  // Settings State
+  const [settings, setSettings] = useState({
+    storeName: '',
+    contactEmail: '',
+    contactPhone: '',
+    whatsappNumber: '',
+    address: '',
+    shippingCost: 0,
+    socialLinks: { facebook: '', instagram: '', twitter: '' }
+  });
+  const [settingsLoading, setSettingsLoading] = useState(false);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/settings`);
+      const data = await res.json();
+      if (data.success) {
+        setSettings(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch settings:', error);
+    }
+  };
+
+  const handleSaveSettings = async (e) => {
+    e.preventDefault();
+    setSettingsLoading(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/settings`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings)
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSettings(data.data);
+        alert('Settings saved successfully!');
+      } else {
+        alert('Failed to save settings');
+      }
+    } catch (error) {
+        console.error('Save error:', error);
+    } finally {
+        setSettingsLoading(false);
+    }
+  };
+
+  const handleSettingsChange = (e) => {
+    const { name, value } = e.target;
+    if (name.includes('.')) {
+        const [parent, child] = name.split('.');
+        setSettings(prev => ({
+            ...prev,
+            [parent]: { ...prev[parent], [child]: value }
+        }));
+    } else {
+        setSettings(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const fetchCoupons = async () => {
+    setCouponsLoading(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/coupons`);
+      const data = await res.json();
+      if (data.success) {
+        setCoupons(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch coupons:', error);
+    } finally {
+      setCouponsLoading(false);
+    }
+  };
+
+   const handleDeleteCoupon = async (id) => {
+    if (!confirm('Are you sure you want to delete this coupon?')) return;
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/coupons/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        setCoupons(coupons.filter(c => c._id !== id));
+        alert('Coupon deleted successfully');
+      } else {
+        alert('Failed to delete coupon');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+    }
+  };
+
   // --- Auth & Data Fetching ---
 
   const handleLogin = (e) => {
@@ -219,6 +402,9 @@ export default function AdminPage({ params }) {
       fetchProducts();
       fetchOrders();
       fetchCategories();
+      fetchCoupons();
+      fetchCustomers();
+      fetchSettings();
     } else {
       alert('Incorrect Password');
     }
@@ -341,6 +527,142 @@ export default function AdminPage({ params }) {
 
   // --- Render Components ---
 
+  const exportToExcel = () => {
+    // 1. Prepare Header
+    const header = ['Order ID', 'Date', 'Customer Name', 'Phone', 'Email', 'City', 'Total (EGP)', 'Status', 'Items'];
+
+    // 2. Prepare Rows
+    const rows = orders.map(order => [
+      order.orderNumber || order._id,
+      new Date(order.createdAt).toLocaleDateString(),
+      order.customerName,
+      order.customerPhone,
+      order.customerEmail,
+      order.shippingAddress?.city || '',
+      order.total,
+      order.status,
+      order.items?.map(i => `${i.title_en} (x${i.quantity})`).join(', ')
+    ]);
+
+    // 3. Convert to CSV
+    const csvContent = [
+      header.join(','),
+      ...rows.map(row => row.map(item => `"${String(item || '').replace(/"/g, '""')}"`).join(','))
+    ].join('\n');
+
+    // 4. Download File
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'orders_export.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handlePrintInvoice = (order) => {
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Invoice #${order.orderNumber || order._id}</title>
+          <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #333; }
+            .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #eee; padding-bottom: 20px; }
+            .logo { font-size: 32px; font-weight: bold; color: #4A3426; margin-bottom: 10px; }
+            .invoice-details { display: flex; justify-content: space-between; margin-bottom: 40px; }
+            .box { background: #f9f9f9; padding: 20px; border-radius: 8px; width: 45%; }
+            h3 { margin-top: 0; color: #4A3426; font-size: 16px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+            table { w-full; border-collapse: collapse; margin-top: 20px; width: 100%; }
+            th { background-color: #4A3426; color: white; padding: 12px; text-align: left; }
+            td { border-bottom: 1px solid #ddd; padding: 12px; }
+            .total-section { float: right; width: 300px; margin-top: 20px; }
+            .row { display: flex; justify-content: space-between; padding: 5px 0; }
+            .grand-total { font-weight: bold; font-size: 20px; border-top: 2px solid #333; margin-top: 10px; padding-top: 10px; color: #4A3426; }
+            .footer { margin-top: 80px; text-align: center; font-size: 12px; color: #888; border-top: 1px solid #eee; padding-top: 20px; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div class="logo">Deep Wood</div>
+            <p>Invoice #${order.orderNumber || order._id}</p>
+            <p>Date: ${new Date(order.createdAt).toLocaleDateString()}</p>
+          </div>
+
+          <div class="invoice-details">
+            <div class="box">
+              <h3>Bill To</h3>
+              <p><strong>${order.customerName}</strong></p>
+              <p>${order.customerPhone}</p>
+              <p>${order.customerEmail || ''}</p>
+              <p>${order.shippingAddress?.street}, ${order.shippingAddress?.city}</p>
+              <p>${order.shippingAddress?.governorate}</p>
+            </div>
+            <div class="box">
+              <h3>Order Info</h3>
+              <p><strong>Status:</strong> ${order.status.toUpperCase()}</p>
+              <p><strong>Payment Method:</strong> ${order.paymentMethod}</p>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${order.items.map(item => `
+                <tr>
+                  <td>${item.title_en || 'Product'}</td>
+                  <td>${item.quantity}</td>
+                  <td>${item.price.toLocaleString()} EGP</td>
+                  <td>${(item.price * item.quantity).toLocaleString()} EGP</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <div class="total-section">
+            <div class="row">
+              <span>Subtotal:</span>
+              <span>${order.subtotal?.toLocaleString()} EGP</span>
+            </div>
+            <div class="row">
+              <span>Shipping:</span>
+              <span>${order.shippingCost?.toLocaleString() || 0} EGP</span>
+            </div>
+            ${order.discount ? `
+            <div class="row" style="color: green;">
+              <span>Discount (${order.couponCode || 'Coupon'}):</span>
+              <span>-${order.discount.toLocaleString()} EGP</span>
+            </div>` : ''}
+            <div class="row grand-total">
+              <span>Total:</span>
+              <span>${order.total?.toLocaleString()} EGP</span>
+            </div>
+          </div>
+
+          <div style="clear: both;"></div>
+
+          <div class="footer">
+            <p>Thank you for choosing Deep Wood!</p>
+            <p>For support: support@deepwood.com | +20 102 088 3895</p>
+          </div>
+
+          <script>
+            window.onload = function() { window.print(); }
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -408,6 +730,36 @@ export default function AdminPage({ params }) {
           >
             <FaShoppingBag className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.orders} ({orders.length})
           </button>
+          <button
+            onClick={() => setActiveTab('customers')}
+            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
+              activeTab === 'customers'
+                ? 'text-deep-brown border-b-2 border-deep-brown'
+                : 'text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <FaUsers className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.customers} ({customers.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
+              activeTab === 'settings'
+                ? 'text-deep-brown border-b-2 border-deep-brown'
+                : 'text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <FaCog className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.settings}
+          </button>
+          <button
+            onClick={() => { setActiveTab('coupons'); setCouponView('list'); }}
+            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
+              activeTab === 'coupons'
+                ? 'text-deep-brown border-b-2 border-deep-brown'
+                : 'text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <FaTags className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.coupons} ({coupons.length})
+          </button>
         </div>
 
         {/* Header */}
@@ -436,12 +788,20 @@ export default function AdminPage({ params }) {
         {activeTab === 'orders' && (
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold text-deep-brown">Order Management</h1>
-            <button
-              onClick={fetchOrders}
-              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-            >
-              Refresh Orders
-            </button>
+            <div className="flex gap-2">
+                <button
+                onClick={exportToExcel}
+                className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                >
+                Export Excel
+                </button>
+                <button
+                onClick={fetchOrders}
+                className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                >
+                Refresh
+                </button>
+            </div>
           </div>
         )}
 
@@ -589,9 +949,17 @@ export default function AdminPage({ params }) {
             <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6 border-b flex justify-between items-center">
                 <h2 className="text-xl font-bold">Order #{selectedOrder.orderNumber || selectedOrder._id.slice(-6)}</h2>
-                <button onClick={() => setSelectedOrder(null)} className="text-gray-400 hover:text-gray-600">
-                  <FaTimes size={20} />
-                </button>
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => handlePrintInvoice(selectedOrder)}
+                        className="flex items-center gap-2 bg-deep-brown text-white px-3 py-1.5 rounded text-sm hover:bg-gold transition"
+                    >
+                        <FaShoppingBag className="text-xs" /> Print Invoice
+                    </button>
+                    <button onClick={() => setSelectedOrder(null)} className="text-gray-400 hover:text-gray-600">
+                      <FaTimes size={20} />
+                    </button>
+                </div>
               </div>
 
               <div className="p-6 space-y-6">
@@ -839,6 +1207,279 @@ export default function AdminPage({ params }) {
           />
         )}
 
+        {/* Customers Content */}
+        {activeTab === 'customers' && (
+          <div>
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-3xl font-bold text-deep-brown">{t.customerManagement}</h1>
+              <div className="bg-gray-100 p-2 rounded-lg flex items-center gap-2">
+                 <FaSearch className="text-gray-400" />
+                 <input
+                    placeholder="Search..."
+                    className="bg-transparent outline-none w-64"
+                 />
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+               {customersLoading ? (
+                  <div className="p-8 text-center text-gray-500">Loading customers...</div>
+               ) : customers.length === 0 ? (
+                  <div className="p-12 text-center text-gray-400">
+                    <FaUsers size={48} className="mx-auto mb-4 opacity-50" />
+                    <p>No customers found yet.</p>
+                  </div>
+               ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                      <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 uppercase text-xs">
+                        <tr>
+                          <th className="p-4">{t.customer}</th>
+                          <th className="p-4">{t.phone} / {t.email}</th>
+                          <th className="p-4 text-center">{t.totalOrders}</th>
+                          <th className="p-4">{t.totalSpent}</th>
+                          <th className="p-4">{t.lastOrder}</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100">
+                        {customers.map((customer, index) => (
+                          <tr key={index} className="hover:bg-gray-50">
+                            <td className="p-4 font-medium text-deep-brown">{customer.name}</td>
+                            <td className="p-4 text-sm text-gray-600">
+                              <div className="font-medium">{customer.phone}</div>
+                              <div className="text-xs text-gray-400">{customer.email}</div>
+                            </td>
+                            <td className="p-4 text-center">
+                              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-bold">
+                                {customer.totalOrders}
+                              </span>
+                            </td>
+                            <td className="p-4 font-bold text-green-600">{customer.totalSpent.toLocaleString()} EGP</td>
+                            <td className="p-4 text-sm text-gray-500">
+                                {new Date(customer.lastOrderDate).toLocaleDateString()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+               )}
+            </div>
+          </div>
+        )}
+
+        {/* Settings Content */}
+        {activeTab === 'settings' && (
+          <div className="max-w-4xl mx-auto">
+             <div className="flex justify-between items-center mb-8">
+               <h1 className="text-3xl font-bold text-deep-brown">{t.generalSettings}</h1>
+             </div>
+
+             <form onSubmit={handleSaveSettings} className="bg-white p-8 rounded-xl shadow-sm space-y-8">
+
+                {/* Store Info */}
+                <div>
+                  <h3 className="text-lg font-bold mb-4 border-b pb-2">{t.storeName}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Store Name</label>
+                      <input
+                        name="storeName"
+                        value={settings.storeName}
+                        onChange={handleSettingsChange}
+                        className="w-full p-3 border rounded-lg"
+                      />
+                    </div>
+                     <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t.shipping} (EGP)</label>
+                      <input
+                        type="number"
+                        name="shippingCost"
+                        value={settings.shippingCost}
+                        onChange={handleSettingsChange}
+                        className="w-full p-3 border rounded-lg"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Info */}
+                <div>
+                   <h3 className="text-lg font-bold mb-4 border-b pb-2">{t.contactInfo}</h3>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">{t.email}</label>
+                        <input
+                          name="contactEmail"
+                          value={settings.contactEmail}
+                          onChange={handleSettingsChange}
+                          className="w-full p-3 border rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">{t.phone}</label>
+                        <input
+                          name="contactPhone"
+                          value={settings.contactPhone}
+                          onChange={handleSettingsChange}
+                          className="w-full p-3 border rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp</label>
+                        <input
+                          name="whatsappNumber"
+                          value={settings.whatsappNumber}
+                          onChange={handleSettingsChange}
+                          className="w-full p-3 border rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        <input
+                          name="address"
+                          value={settings.address}
+                          onChange={handleSettingsChange}
+                          className="w-full p-3 border rounded-lg"
+                        />
+                      </div>
+                   </div>
+                </div>
+
+                {/* Social Media */}
+                <div>
+                   <h3 className="text-lg font-bold mb-4 border-b pb-2">{t.socialMedia}</h3>
+                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Facebook</label>
+                        <input
+                          name="socialLinks.facebook"
+                          value={settings.socialLinks?.facebook || ''}
+                          onChange={handleSettingsChange}
+                          placeholder="Link..."
+                          className="w-full p-3 border rounded-lg"
+                        />
+                      </div>
+                      <div>
+                         <label className="block text-sm font-medium text-gray-700 mb-1">Instagram</label>
+                        <input
+                          name="socialLinks.instagram"
+                          value={settings.socialLinks?.instagram || ''}
+                          onChange={handleSettingsChange}
+                          placeholder="Link..."
+                          className="w-full p-3 border rounded-lg"
+                        />
+                      </div>
+                      <div>
+                         <label className="block text-sm font-medium text-gray-700 mb-1">Twitter</label>
+                        <input
+                          name="socialLinks.twitter"
+                          value={settings.socialLinks?.twitter || ''}
+                          onChange={handleSettingsChange}
+                          placeholder="Link..."
+                          className="w-full p-3 border rounded-lg"
+                        />
+                      </div>
+                   </div>
+                </div>
+
+                <div className="pt-6 border-t flex justify-end">
+                   <button
+                     type="submit"
+                     disabled={settingsLoading}
+                     className="px-8 py-3 bg-deep-brown text-white rounded-lg hover:bg-gold transition disabled:opacity-50 font-bold"
+                   >
+                     {settingsLoading ? 'Saving...' : t.saveSettings}
+                   </button>
+                </div>
+             </form>
+          </div>
+        )}
+
+        {/* Coupons Content */}
+        {activeTab === 'coupons' && couponView === 'list' && (
+          <div>
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-3xl font-bold text-deep-brown">{t.couponManagement}</h1>
+              <button
+                onClick={() => { setEditingCoupon(null); setCouponView('editor'); }}
+                className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+              >
+                <FaPlus /> {t.addCoupon}
+              </button>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+              {couponsLoading ? (
+                <div className="p-8 text-center text-gray-500">Loading coupons...</div>
+              ) : coupons.length === 0 ? (
+                <div className="p-12 text-center text-gray-400">
+                  <FaTags size={48} className="mx-auto mb-4 opacity-50" />
+                  <p>{t.noCoupons}</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 uppercase text-xs">
+                      <tr>
+                        <th className="p-4">{t.code}</th>
+                        <th className="p-4">{t.discount}</th>
+                        <th className="p-4">{t.validUntil}</th>
+                        <th className="p-4">{t.usage}</th>
+                        <th className="p-4">{t.status}</th>
+                        <th className="p-4 text-right">{t.actions}</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {coupons.map(coupon => (
+                        <tr key={coupon._id} className="hover:bg-gray-50">
+                          <td className="p-4 font-mono font-bold text-deep-brown">{coupon.code}</td>
+                          <td className="p-4 font-bold">
+                            {coupon.discountValue} {coupon.discountType === 'percentage' ? '%' : 'EGP'}
+                          </td>
+                          <td className="p-4 text-sm text-gray-500">
+                            {new Date(coupon.validUntil).toLocaleDateString()}
+                          </td>
+                          <td className="p-4 text-sm">
+                            {coupon.usedCount} {coupon.usageLimit ? `/ ${coupon.usageLimit}` : ''}
+                          </td>
+                          <td className="p-4">
+                            <span className={`text-xs font-bold px-2 py-1 rounded ${
+                              coupon.isActive ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+                            }`}>
+                              {coupon.isActive ? t.active : t.inactive}
+                            </span>
+                          </td>
+                          <td className="p-4 text-right">
+                            <button onClick={() => { setEditingCoupon(coupon); setCouponView('editor'); }} className="text-blue-500 p-2 hover:bg-blue-50 rounded mr-2" title={t.edit}>
+                              <FaEdit />
+                            </button>
+                            <button onClick={() => handleDeleteCoupon(coupon._id)} className="text-red-500 p-2 hover:bg-red-50 rounded" title={t.delete}>
+                              <FaTrash />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Coupon Editor */}
+        {activeTab === 'coupons' && couponView === 'editor' && (
+             <CouponEditor
+                initialData={editingCoupon}
+                onCancel={() => setCouponView('list')}
+                onSuccess={() => {
+                    fetchCoupons();
+                    setCouponView('list');
+                }}
+             />
+        )}
+
       </div>
     </div>
   );
@@ -889,6 +1530,8 @@ function ProductEditor({ initialData, onCancel, onSuccess }) {
     materials_en: '',
     materials_ar: '',
     status: 'active', // Default to active for new products
+    colors: [],
+    sizes: [],
     ...initialData
   });
 
@@ -902,7 +1545,9 @@ function ProductEditor({ initialData, onCancel, onSuccess }) {
             depth: initialData.dimensions?.depth || '',
             materials_en: initialData.materials_en?.join(', ') || '',
             materials_ar: initialData.materials_ar?.join(', ') || '',
-            category: initialData.category?._id || '6584281483321c2123456789'
+            category: initialData.category?._id || '6584281483321c2123456789',
+            colors: initialData.colors || [],
+            sizes: initialData.sizes || [],
         }));
     }
   }, [initialData]);
@@ -923,6 +1568,48 @@ function ProductEditor({ initialData, onCancel, onSuccess }) {
     }
   };
 
+
+  // --- Variants Handlers ---
+  const handleAddColor = () => {
+    setFormData(prev => ({
+      ...prev,
+      colors: [...(prev.colors || []), { name_en: '', name_ar: '', hex: '#000000' }]
+    }));
+  };
+
+  const handleColorChange = (index, field, value) => {
+    const newColors = [...(formData.colors || [])];
+    newColors[index] = { ...newColors[index], [field]: value };
+    setFormData(prev => ({ ...prev, colors: newColors }));
+  };
+
+  const handleRemoveColor = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      colors: prev.colors.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleAddSize = () => {
+    setFormData(prev => ({
+      ...prev,
+      sizes: [...(prev.sizes || []), { dimensions_en: '', dimensions_ar: '', price: 0, stock: 0 }]
+    }));
+  };
+
+  const handleSizeChange = (index, field, value) => {
+    const newSizes = [...(formData.sizes || [])];
+    newSizes[index] = { ...newSizes[index], [field]: value };
+    setFormData(prev => ({ ...prev, sizes: newSizes }));
+  };
+
+  const handleRemoveSize = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      sizes: prev.sizes.filter((_, i) => i !== index)
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -934,7 +1621,7 @@ function ProductEditor({ initialData, onCancel, onSuccess }) {
         // Append all text fields
         Object.keys(formData).forEach(key => {
             // Skip complex fields we handle manually
-            if (['materials_en', 'materials_ar', 'width', 'height', 'depth', 'image', 'category'].includes(key)) {
+            if (['materials_en', 'materials_ar', 'width', 'height', 'depth', 'image', 'category', 'colors', 'sizes'].includes(key)) {
                 return;
             }
             if (typeof formData[key] !== 'object') {
@@ -950,6 +1637,16 @@ function ProductEditor({ initialData, onCancel, onSuccess }) {
         if (typeof formData.materials_ar === 'string') {
              const mats = formData.materials_ar.split(',').map(s => s.trim()).filter(Boolean);
              data.append('materials_ar', JSON.stringify(mats));
+        }
+
+        // Handle Variants: Colors
+        if (formData.colors && formData.colors.length > 0) {
+            data.append('colors', JSON.stringify(formData.colors));
+        }
+
+        // Handle Variants: Sizes
+        if (formData.sizes && formData.sizes.length > 0) {
+            data.append('sizes', JSON.stringify(formData.sizes));
         }
 
         // Handle dimensions
@@ -1148,6 +1845,55 @@ function ProductEditor({ initialData, onCancel, onSuccess }) {
                     <input name="materials_ar" value={formData.materials_ar} onChange={handleChange} className="input-field" placeholder="مثال: خشب بلوط، جوز، معدن" />
                     <p className="text-xs text-gray-400 mt-1">افصل بفاصلة</p>
                 </div>
+            </div>
+
+            {/* Variants: Colors */}
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <div className="flex justify-between items-center mb-4">
+                    <label className="block text-sm font-medium text-gray-700">🎨 Colors (Optional)</label>
+                    <button type="button" onClick={handleAddColor} className="text-sm text-blue-600 hover:text-blue-800 font-medium">+ Add Color</button>
+                </div>
+                {formData.colors?.map((color, index) => (
+                    <div key={index} className="flex gap-2 mb-2 items-center bg-white p-2 rounded shadow-sm border border-gray-100">
+                        <input type="color" value={color.hex} onChange={(e) => handleColorChange(index, 'hex', e.target.value)} className="h-10 w-10 p-0 border-0 rounded cursor-pointer shrink-0" title="Choose hex color" />
+                        <input placeholder="Name (EN)" value={color.name_en} onChange={(e) => handleColorChange(index, 'name_en', e.target.value)} className="input-field flex-1 text-sm py-2" />
+                        <div dir="rtl" className="flex-1">
+                             <input placeholder="الاسم (عربي)" value={color.name_ar} onChange={(e) => handleColorChange(index, 'name_ar', e.target.value)} className="input-field text-sm py-2" />
+                        </div>
+                        <button type="button" onClick={() => handleRemoveColor(index)} className="text-red-500 hover:bg-red-50 p-2 rounded"><FaTrash size={14} /></button>
+                    </div>
+                ))}
+            </div>
+
+            {/* Variants: Sizes */}
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <div className="flex justify-between items-center mb-4">
+                    <label className="block text-sm font-medium text-gray-700">📏 Sizes / Variants (Optional)</label>
+                    <button type="button" onClick={handleAddSize} className="text-sm text-blue-600 hover:text-blue-800 font-medium">+ Add Size</button>
+                </div>
+                {formData.sizes?.map((size, index) => (
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2 items-end bg-white p-3 rounded shadow-sm border border-gray-100">
+                        <div>
+                             <label className="text-xs text-gray-500 mb-1 block">Dims (EN)</label>
+                             <input placeholder="180x200" value={size.dimensions_en} onChange={(e) => handleSizeChange(index, 'dimensions_en', e.target.value)} className="input-field text-sm py-2" />
+                        </div>
+                         <div dir="rtl">
+                             <label className="text-xs text-gray-500 mb-1 block">الأبعاد (عربي)</label>
+                             <input placeholder="180x200" value={size.dimensions_ar} onChange={(e) => handleSizeChange(index, 'dimensions_ar', e.target.value)} className="input-field text-sm py-2" />
+                        </div>
+                        <div>
+                             <label className="text-xs text-gray-500 mb-1 block">Price (Override)</label>
+                             <input type="number" placeholder="Price" value={size.price} onChange={(e) => handleSizeChange(index, 'price', e.target.value)} className="input-field text-sm py-2" />
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="flex-1">
+                                <label className="text-xs text-gray-500 mb-1 block">Stock</label>
+                                <input type="number" placeholder="Qty" value={size.stock} onChange={(e) => handleSizeChange(index, 'stock', e.target.value)} className="input-field text-sm py-2" />
+                            </div>
+                            <button type="button" onClick={() => handleRemoveSize(index)} className="text-red-500 hover:bg-red-50 p-2 rounded mt-4"><FaTrash size={14} /></button>
+                        </div>
+                    </div>
+                ))}
             </div>
 
             {/* Stock & Flags */}
@@ -1367,6 +2113,194 @@ function CategoryEditor({ initialData, onCancel, onSuccess }) {
             className="px-6 py-2 bg-deep-brown text-white rounded hover:bg-gold transition disabled:opacity-50"
           >
             {isLoading ? 'Saving...' : 'Save Category'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+// --- CouponEditor Component ---
+function CouponEditor({ initialData, onCancel, onSuccess }) {
+  const isEditMode = !!initialData;
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    code: initialData?.code || '',
+    discountType: initialData?.discountType || 'percentage',
+    discountValue: initialData?.discountValue || '',
+    minOrderAmount: initialData?.minOrderAmount || '',
+    maxDiscount: initialData?.maxDiscount || '',
+    usageLimit: initialData?.usageLimit || '',
+    validUntil: initialData?.validUntil ? new Date(initialData.validUntil).toISOString().split('T')[0] : '',
+    isActive: initialData?.isActive ?? true,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const url = isEditMode
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/coupons/${initialData._id}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/coupons`;
+
+      const method = isEditMode ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert(isEditMode ? 'Coupon updated successfully!' : 'Coupon created successfully!');
+        onSuccess(data.data);
+      } else {
+        alert(data.error || 'Operation failed');
+      }
+    } catch (error) {
+      console.error('Submit error:', error);
+      alert('An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="bg-white p-6 rounded-xl shadow-sm">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold">{isEditMode ? 'Edit Coupon' : 'Create New Coupon'}</h2>
+        <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">
+          <FaTimes size={24} />
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Coupon Code</label>
+            <input
+              name="code"
+              value={formData.code}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border rounded-lg font-mono uppercase"
+              placeholder="e.g. SUMMER20"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Valid Until</label>
+            <input
+              type="date"
+              name="validUntil"
+              value={formData.validUntil}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border rounded-lg"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Discount Type</label>
+            <select
+              name="discountType"
+              value={formData.discountType}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg"
+            >
+              <option value="percentage">Percentage (%)</option>
+              <option value="fixed">Fixed Amount (EGP)</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Discount Value</label>
+            <input
+              type="number"
+              name="discountValue"
+              value={formData.discountValue}
+              onChange={handleChange}
+              required
+              min="0"
+              className="w-full p-3 border rounded-lg"
+              placeholder={formData.discountType === 'percentage' ? '20' : '100'}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Min Order Amount</label>
+            <input
+              type="number"
+              name="minOrderAmount"
+              value={formData.minOrderAmount}
+              onChange={handleChange}
+              min="0"
+              className="w-full p-3 border rounded-lg"
+              placeholder="0"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Max Discount (Optional)</label>
+            <input
+              type="number"
+              name="maxDiscount"
+              value={formData.maxDiscount}
+              onChange={handleChange}
+              min="0"
+              className="w-full p-3 border rounded-lg text-gray-400"
+              readOnly={formData.discountType === 'fixed'}
+              placeholder={formData.discountType === 'fixed' ? 'N/A' : 'No Limit'}
+            />
+          </div>
+           <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Usage Limit (Optional)</label>
+            <input
+              type="number"
+              name="usageLimit"
+              value={formData.usageLimit}
+              onChange={handleChange}
+              min="1"
+              className="w-full p-3 border rounded-lg"
+              placeholder="Unlimited"
+            />
+          </div>
+        </div>
+
+        <div>
+           <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                name="isActive"
+                checked={formData.isActive}
+                onChange={handleChange}
+                className="w-5 h-5 accent-green-600"
+              />
+              <span className="font-medium">Active</span>
+           </label>
+        </div>
+
+        <div className="pt-6 border-t flex justify-end gap-3">
+          <button type="button" onClick={onCancel} className="px-6 py-2 border rounded hover:bg-gray-50">Cancel</button>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="px-6 py-2 bg-deep-brown text-white rounded hover:bg-gold transition disabled:opacity-50"
+          >
+            {isLoading ? 'Saving...' : 'Save Coupon'}
           </button>
         </div>
       </form>

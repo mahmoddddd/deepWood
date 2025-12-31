@@ -1,15 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { FaShoppingCart, FaWhatsapp, FaRuler, FaCube, FaCheck, FaPhone } from 'react-icons/fa';
 import { useCart } from '@/context/CartContext';
+import Reviews from './product/Reviews';
 
 export default function ProductDetailsClient({ product, locale = 'en' }) {
   const { addToCart } = useCart();
   const [selectedImage, setSelectedImage] = useState(product.image?.url);
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
+
+  // Variant State
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+
+  // Initialize variants
+  useEffect(() => {
+    if (product.colors?.length > 0) setSelectedColor(product.colors[0]);
+    if (product.sizes?.length > 0) setSelectedSize(product.sizes[0]);
+  }, [product]);
 
   const isRTL = locale === 'ar';
 
@@ -18,13 +29,22 @@ export default function ProductDetailsClient({ product, locale = 'en' }) {
   const description = isRTL ? (product.description_ar || product.description_en) : (product.description_en || product.description_ar);
   const categoryName = product.category ? (isRTL ? (product.category.name_ar || product.category.name_en) : (product.category.name_en || product.category.name_ar)) : '';
 
-  const price = product.price;
+  // Price Logic
+  const basePrice = product.price;
   const salePrice = product.salePrice;
-  const discount = salePrice ? Math.round(((price - salePrice) / price) * 100) : 0;
+  // If a size is selected and has a price > 0, use it. Otherwise use base/sale price.
+  const effectivePrice = (selectedSize?.price > 0) ? selectedSize.price : (salePrice || basePrice);
+  const displayOriginalPrice = (selectedSize?.price > 0) ? null : (salePrice ? basePrice : null);
+
+  const discount = displayOriginalPrice ? Math.round(((displayOriginalPrice - effectivePrice) / displayOriginalPrice) * 100) : 0;
 
   const handleAddToCart = () => {
     setIsAdding(true);
-    addToCart(product, quantity);
+    addToCart(
+        { ...product, price: effectivePrice },
+        quantity,
+        { color: selectedColor, size: selectedSize }
+    );
     setTimeout(() => setIsAdding(false), 1000);
   };
 
@@ -102,19 +122,62 @@ export default function ProductDetailsClient({ product, locale = 'en' }) {
 
           {/* Price */}
           <div className="flex items-end gap-3 mb-8">
-            {salePrice ? (
+            {displayOriginalPrice ? (
               <>
                 <span className="text-3xl font-bold text-red-600">
-                  {salePrice.toLocaleString()} <span className="text-lg">EGP</span>
+                  {effectivePrice.toLocaleString()} <span className="text-lg">EGP</span>
                 </span>
                 <span className="text-xl text-gray-400 line-through mb-1">
-                  {price.toLocaleString()} EGP
+                  {displayOriginalPrice.toLocaleString()} EGP
                 </span>
               </>
             ) : (
               <span className="text-3xl font-bold text-deep-brown">
-                {price.toLocaleString()} <span className="text-lg">EGP</span>
+                {effectivePrice.toLocaleString()} <span className="text-lg">EGP</span>
               </span>
+            )}
+          </div>
+
+          {/* Variants Selectors */}
+          <div className="space-y-6 mb-8">
+            {product.colors?.length > 0 && (
+                <div>
+                    <h3 className="text-sm font-bold text-gray-900 mb-3">{isRTL ? 'اللون' : 'Color'}</h3>
+                    <div className="flex gap-3">
+                        {product.colors.map((color, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => setSelectedColor(color)}
+                                className={`w-12 h-12 rounded-full border-2 p-0.5 transition-all ${selectedColor?.hex === color.hex ? 'border-gold scale-110 ring-2 ring-gold/20' : 'border-gray-200 hover:border-gray-300'}`}
+                                title={isRTL ? color.name_ar : color.name_en}
+                            >
+                                <div className="w-full h-full rounded-full shadow-sm" style={{ backgroundColor: color.hex }}></div>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {product.sizes?.length > 0 && (
+                 <div>
+                    <h3 className="text-sm font-bold text-gray-900 mb-3">{isRTL ? 'المقاس' : 'Size / Variant'}</h3>
+                    <div className="flex flex-wrap gap-3">
+                        {product.sizes.map((size, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => setSelectedSize(size)}
+                                className={`px-4 py-3 border rounded-lg text-sm font-medium transition-all flex flex-col items-center min-w-[100px] ${
+                                    selectedSize === size
+                                    ? 'border-gold bg-gold/5 text-deep-brown ring-1 ring-gold'
+                                    : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                                }`}
+                            >
+                                <span>{isRTL ? size.dimensions_ar : size.dimensions_en}</span>
+                                {size.price > 0 && <span className="text-xs opacity-70 mt-1 font-normal">{size.price.toLocaleString()} EGP</span>}
+                            </button>
+                        ))}
+                    </div>
+                 </div>
             )}
           </div>
 
@@ -211,6 +274,8 @@ export default function ProductDetailsClient({ product, locale = 'en' }) {
           )}
         </div>
       </div>
+
+      <Reviews productId={product._id} locale={locale} />
     </div>
   );
 }
