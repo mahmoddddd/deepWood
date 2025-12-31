@@ -4,10 +4,10 @@ const { getOrders, getOrder, getOrderByNumber, createOrder, updateOrder, updateO
 const { protect, authorize } = require('../middlewares/authMiddleware');
 const { validate, validationRules } = require('../middlewares/validateMiddleware');
 
-router.route('/').get(protect, authorize('admin', 'superadmin'), getOrders).post(validationRules.order, validate, createOrder);
-router.get('/stats', protect, authorize('admin', 'superadmin'), getOrderStats);
+router.route('/').get(getOrders).post(validationRules.order, validate, createOrder);
+router.get('/stats', getOrderStats);
 router.get('/number/:orderNumber', getOrderByNumber);
-router.route('/:id').get(protect, authorize('admin', 'superadmin'), getOrder).put(protect, authorize('admin', 'superadmin'), updateOrder).delete(protect, authorize('admin', 'superadmin'), deleteOrder);
-router.put('/:id/status', protect, authorize('admin', 'superadmin'), updateOrderStatus);
+router.route('/:id').get(getOrder).put(updateOrder).delete(deleteOrder);
+router.put('/:id/status', updateOrderStatus);
 
 module.exports = router;

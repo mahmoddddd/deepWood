@@ -1,39 +1,13 @@
 'use client';
 
-// Toyota Logo SVG Component
-const ToyotaLogo = ({ className }) => (
-  <svg className={className} viewBox="0 0 200 130" fill="currentColor">
-    <ellipse cx="100" cy="65" rx="95" ry="60" fill="none" stroke="currentColor" strokeWidth="6"/>
-    <ellipse cx="100" cy="65" rx="60" ry="35" fill="none" stroke="currentColor" strokeWidth="5"/>
-    <ellipse cx="100" cy="65" rx="28" ry="14" fill="none" stroke="currentColor" strokeWidth="4"/>
-    <path d="M100 5 L100 125" stroke="currentColor" strokeWidth="5"/>
-  </svg>
-);
-
-// Toshiba Logo SVG Component
-const ToshibaLogo = ({ className }) => (
-  <svg className={className} viewBox="0 0 280 60" fill="currentColor">
-    <text x="140" y="45" textAnchor="middle" fontSize="42" fontWeight="bold" fontFamily="Arial, sans-serif" fill="currentColor">
-      TOSHIBA
-    </text>
-  </svg>
-);
-
-// Tornado Logo SVG Component
-const TornadoLogo = ({ className }) => (
-  <svg className={className} viewBox="0 0 260 60" fill="currentColor">
-    <text x="130" y="45" textAnchor="middle" fontSize="38" fontWeight="bold" fontFamily="Arial, sans-serif" fill="currentColor">
-      TORNADO
-    </text>
-  </svg>
-);
+import Image from 'next/image';
 
 const partners = [
   {
     id: 1,
     name: 'Toyota',
     nameAr: 'تويوتا',
-    Logo: ToyotaLogo,
+    logo: '/imagesss/logos/toyotaLogo.jpeg',
     description: 'Office & Showroom Furniture',
     descriptionAr: 'أثاث المكاتب والمعارض',
   },
@@ -41,17 +15,27 @@ const partners = [
     id: 2,
     name: 'Toshiba',
     nameAr: 'توشيبا العربي',
-    Logo: ToshibaLogo,
+    logo: '/imagesss/logos/toshiba.png',
     description: 'Factory & Exhibition Stands',
     descriptionAr: 'أثاث المصانع والمعارض',
   },
   {
     id: 3,
+    name: 'Raya',
+    nameAr: 'راية',
+    logo: '/imagesss/logos/raya.jpeg',
+    description: 'Corporate Furniture',
+    descriptionAr: 'أثاث الشركات',
+  },
+  {
+    id: 4,
     name: 'Tornado',
     nameAr: 'تورنيدو',
-    Logo: TornadoLogo,
+    // Fallback to text if no image provided yet, or keep consistent style if image available later
+    logo: null,
     description: 'Showroom Displays',
     descriptionAr: 'ديكورات المعارض',
+    color: '#0066B3', // Tornado blue for text fallback
   },
 ];
 
@@ -80,8 +64,24 @@ export default function PartnersSection({ locale = 'en' }) {
               className="group flex flex-col items-center"
             >
               {/* Logo */}
-              <div className="w-32 md:w-40 h-20 flex items-center justify-center mb-3 transition-all duration-300 text-gray-300 group-hover:text-deep-brown">
-                <partner.Logo className="w-full h-full" />
+              <div className="w-32 md:w-40 h-24 flex items-center justify-center mb-3 transition-all duration-300 grayscale hover:grayscale-0 bg-white rounded-lg p-2 shadow-sm hover:shadow-md border border-gray-100">
+                {partner.logo ? (
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={partner.logo}
+                      alt={partner.name}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                ) : (
+                  <span
+                    className="text-xl font-bold transition-colors"
+                    style={{ color: '#9CA3AF' }}
+                  >
+                    {partner.name}
+                  </span>
+                )}
               </div>
 
               {/* Name below logo */}

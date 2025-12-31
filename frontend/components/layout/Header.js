@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { FaBars, FaTimes, FaGlobe } from 'react-icons/fa';
+import { FaBars, FaTimes, FaGlobe, FaShoppingCart } from 'react-icons/fa';
+import { useCart } from '@/context/CartContext';
 
 export default function Header({ locale, translations }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { totalItems, toggleCart } = useCart();
   const pathname = usePathname();
   const isRTL = locale === 'ar';
   const t = translations.nav;
@@ -68,7 +70,7 @@ export default function Header({ locale, translations }) {
             ))}
           </nav>
 
-          {/* Language Switcher & CTA */}
+          {/* Language Switcher & Cart & CTA */}
           <div className="hidden lg:flex items-center gap-4">
             <Link
               href={`/${switchLocale}${currentPath}`}
@@ -77,18 +79,48 @@ export default function Header({ locale, translations }) {
               <FaGlobe />
               <span>{locale === 'en' ? 'عربي' : 'EN'}</span>
             </Link>
+
+            {/* Cart Icon */}
+            <button
+              onClick={toggleCart}
+              className={`relative p-2 transition-colors ${isScrolled ? 'text-deep-brown hover:text-gold' : 'text-white hover:text-gold'}`}
+            >
+              <FaShoppingCart size={20} />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
             <Link href={`/${locale}/contact`} className="btn-gold">
               {translations.hero.contact}
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className={`lg:hidden p-2 ${isScrolled ? 'text-deep-brown' : 'text-white'}`}
-          >
-            {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-          </button>
+          {/* Mobile Actions (Cart + Menu) */}
+          <div className="flex items-center gap-2 lg:hidden">
+             {/* Mobile Cart Icon */}
+             <button
+              onClick={toggleCart}
+              className={`p-2 relative ${isScrolled ? 'text-deep-brown' : 'text-white'}`}
+            >
+              <FaShoppingCart size={22} />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className={`p-2 ${isScrolled ? 'text-deep-brown' : 'text-white'}`}
+            >
+              {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 

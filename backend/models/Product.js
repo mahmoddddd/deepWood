@@ -35,6 +35,13 @@ const productSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
     },
+    sku: {
+      type: String,
+      unique: true,
+      trim: true,
+      required: [true, 'SKU is required'],
+      uppercase: true,
+    },
     price: {
       type: Number,
       required: [true, 'Price is required'],
