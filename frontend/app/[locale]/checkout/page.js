@@ -96,7 +96,15 @@ export default function CheckoutPage({ params }) {
           title_ar: item.product.title_ar,
           price: item.price,
           quantity: item.quantity,
-          image: item.product.image?.url
+          image: item.product.image?.url,
+          selectedColor: item.selectedVariant?.color ? {
+             name: item.selectedVariant.color.name,
+             hex: item.selectedVariant.color.hex
+          } : undefined,
+          selectedSize: item.selectedVariant?.size ? {
+             dimensions_en: item.selectedVariant.size.dimensions_en,
+             dimensions_ar: item.selectedVariant.size.dimensions_ar
+          } : undefined
         })),
         subtotal: totalPrice,
         shippingCost,

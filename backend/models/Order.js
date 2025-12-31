@@ -18,6 +18,14 @@ const orderItemSchema = new mongoose.Schema({
     min: 1,
   },
   image: String,
+  selectedColor: {
+    name: String,
+    hex: String
+  },
+  selectedSize: {
+    dimensions_en: String,
+    dimensions_ar: String
+  }
 });
 
 const orderSchema = new mongoose.Schema(
