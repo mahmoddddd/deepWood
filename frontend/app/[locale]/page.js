@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
+import { FaArrowRight, FaArrowLeft, FaCouch, FaBuilding, FaHammer, FaAward, FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaClock } from 'react-icons/fa';
 import enTranslations from '@/locales/en/common.json';
 import arTranslations from '@/locales/ar/common.json';
 import GallerySection from '@/components/GallerySection';
@@ -43,7 +43,8 @@ export default async function HomePage({ params }) {
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center">
         <HeroImage />
-        <div className="absolute inset-0 bg-gradient-to-r from-matte-black/90 to-deep-brown/70"></div>
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
         <div className="relative z-10 container-custom text-center text-white">
           <div className="gold-line mx-auto mb-6"></div>
           <h1 className="text-5xl md:text-7xl font-bold mb-6 fade-in">{t.hero.title}</h1>
@@ -93,18 +94,38 @@ export default async function HomePage({ params }) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.length > 0 ? services.map((service) => (
               <div key={service._id} className="card p-6 text-center group">
-                <div className="w-16 h-16 mx-auto mb-4 bg-beige rounded-full flex items-center justify-center group-hover:bg-gold transition-colors">
-                  <span className="text-2xl">🪵</span>
+                <div className="w-16 h-16 mx-auto mb-4 border-2 border-gold/30 rounded-full flex items-center justify-center group-hover:bg-gold group-hover:border-gold transition-all duration-300">
+                  <FaCouch className="text-2xl text-gold group-hover:text-white transition-colors" />
                 </div>
                 <h3 className="text-xl font-semibold text-deep-brown mb-2">{isRTL ? service.title_ar : service.title_en}</h3>
                 <p className="text-warm-gray">{isRTL ? service.shortDescription_ar : service.shortDescription_en}</p>
               </div>
             )) : (
               <>
-                <div className="card p-6 text-center"><div className="w-16 h-16 mx-auto mb-4 bg-beige rounded-full flex items-center justify-center"><span className="text-2xl">🏠</span></div><h3 className="text-xl font-semibold text-deep-brown mb-2">{t.services.residential}</h3></div>
-                <div className="card p-6 text-center"><div className="w-16 h-16 mx-auto mb-4 bg-beige rounded-full flex items-center justify-center"><span className="text-2xl">🏢</span></div><h3 className="text-xl font-semibold text-deep-brown mb-2">{t.services.corporate}</h3></div>
-                <div className="card p-6 text-center"><div className="w-16 h-16 mx-auto mb-4 bg-beige rounded-full flex items-center justify-center"><span className="text-2xl">🔨</span></div><h3 className="text-xl font-semibold text-deep-brown mb-2">{t.services.custom}</h3></div>
-                <div className="card p-6 text-center"><div className="w-16 h-16 mx-auto mb-4 bg-beige rounded-full flex items-center justify-center"><span className="text-2xl">🏺</span></div><h3 className="text-xl font-semibold text-deep-brown mb-2">{t.services.antique}</h3></div>
+                <div className="card p-6 text-center group">
+                    <div className="w-16 h-16 mx-auto mb-4 border-2 border-gold/30 rounded-full flex items-center justify-center group-hover:bg-gold group-hover:border-gold transition-all duration-300">
+                        <FaCouch className="text-2xl text-gold group-hover:text-white transition-colors" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-deep-brown mb-2">{t.services.residential}</h3>
+                </div>
+                <div className="card p-6 text-center group">
+                    <div className="w-16 h-16 mx-auto mb-4 border-2 border-gold/30 rounded-full flex items-center justify-center group-hover:bg-gold group-hover:border-gold transition-all duration-300">
+                        <FaBuilding className="text-2xl text-gold group-hover:text-white transition-colors" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-deep-brown mb-2">{t.services.corporate}</h3>
+                </div>
+                <div className="card p-6 text-center group">
+                    <div className="w-16 h-16 mx-auto mb-4 border-2 border-gold/30 rounded-full flex items-center justify-center group-hover:bg-gold group-hover:border-gold transition-all duration-300">
+                        <FaHammer className="text-2xl text-gold group-hover:text-white transition-colors" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-deep-brown mb-2">{t.services.custom}</h3>
+                </div>
+                <div className="card p-6 text-center group">
+                    <div className="w-16 h-16 mx-auto mb-4 border-2 border-gold/30 rounded-full flex items-center justify-center group-hover:bg-gold group-hover:border-gold transition-all duration-300">
+                        <FaAward className="text-2xl text-gold group-hover:text-white transition-colors" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-deep-brown mb-2">{t.services.antique}</h3>
+                </div>
               </>
             )}
           </div>
@@ -287,8 +308,8 @@ export default async function HomePage({ params }) {
                   <div className="space-y-6">
                     {/* Address */}
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-2xl">📍</span>
+                      <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center flex-shrink-0 text-gold">
+                        <FaMapMarkerAlt size={20} />
                       </div>
                       <div>
                         <div className="font-semibold text-gold mb-1">{isRTL ? 'العنوان' : 'Address'}</div>
@@ -300,8 +321,8 @@ export default async function HomePage({ params }) {
 
                     {/* Phone */}
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-2xl">📞</span>
+                      <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center flex-shrink-0 text-gold">
+                        <FaPhoneAlt size={20} />
                       </div>
                       <div>
                         <div className="font-semibold text-gold mb-1">{isRTL ? 'الهاتف' : 'Phone'}</div>
@@ -311,8 +332,8 @@ export default async function HomePage({ params }) {
 
                     {/* Email */}
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-2xl">✉️</span>
+                      <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center flex-shrink-0 text-gold">
+                        <FaEnvelope size={20} />
                       </div>
                       <div>
                         <div className="font-semibold text-gold mb-1">{isRTL ? 'البريد الإلكتروني' : 'Email'}</div>
@@ -322,8 +343,8 @@ export default async function HomePage({ params }) {
 
                     {/* Working Hours */}
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-2xl">🕐</span>
+                      <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center flex-shrink-0 text-gold">
+                        <FaClock size={20} />
                       </div>
                       <div>
                         <div className="font-semibold text-gold mb-1">{isRTL ? 'ساعات العمل' : 'Working Hours'}</div>
@@ -338,17 +359,17 @@ export default async function HomePage({ params }) {
                   <div className="mt-10 pt-8 border-t border-white/10">
                     <div className="text-gold font-semibold mb-4">{isRTL ? 'تابعنا' : 'Follow Us'}</div>
                     <div className="flex gap-4">
-                      <a href="#" className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-gold transition-colors">
-                        <span className="text-xl">📘</span>
+                      <a href="#" className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-gold hover:text-deep-brown transition-all text-white">
+                        <FaFacebook size={20} />
                       </a>
-                      <a href="#" className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-gold transition-colors">
-                        <span className="text-xl">📸</span>
+                      <a href="#" className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-gold hover:text-deep-brown transition-all text-white">
+                        <FaInstagram size={20} />
                       </a>
-                      <a href="#" className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-gold transition-colors">
-                        <span className="text-xl">🐦</span>
+                      <a href="#" className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-gold hover:text-deep-brown transition-all text-white">
+                        <FaTwitter size={20} />
                       </a>
-                      <a href="#" className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-gold transition-colors">
-                        <span className="text-xl">💼</span>
+                      <a href="#" className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-gold hover:text-deep-brown transition-all text-white">
+                        <FaLinkedin size={20} />
                       </a>
                     </div>
                   </div>
