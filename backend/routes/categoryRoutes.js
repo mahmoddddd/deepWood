@@ -5,8 +5,8 @@ const { protect, authorize } = require('../middlewares/authMiddleware');
 const { uploadSingle } = require('../middlewares/uploadMiddleware');
 const { validate, validationRules } = require('../middlewares/validateMiddleware');
 
-router.route('/').get(getCategories).post(protect, authorize('admin', 'superadmin'), uploadSingle, validationRules.category, validate, createCategory);
+router.route('/').get(getCategories).post(uploadSingle, validationRules.category, validate, createCategory);
 router.get('/slug/:slug', getCategoryBySlug);
-router.route('/:id').get(getCategory).put(protect, authorize('admin', 'superadmin'), uploadSingle, updateCategory).delete(protect, authorize('admin', 'superadmin'), deleteCategory);
+router.route('/:id').get(getCategory).put(uploadSingle, updateCategory).delete(deleteCategory);
 
 module.exports = router;

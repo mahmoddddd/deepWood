@@ -1,13 +1,197 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { FaEdit, FaTrash, FaPlus, FaSearch, FaBoxOpen, FaImage, FaTimes, FaShoppingBag, FaEye, FaCheck } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaSearch, FaBoxOpen, FaImage, FaTimes, FaShoppingBag, FaEye, FaCheck, FaTags, FaChartBar, FaGlobe } from 'react-icons/fa';
 
-export default function AdminPage() {
+// Admin Translations
+const translations = {
+  en: {
+    login: 'Admin Login',
+    password: 'Enter Admin Password',
+    loginBtn: 'Login',
+    dashboard: 'Dashboard',
+    products: 'Products',
+    categories: 'Categories',
+    orders: 'Orders',
+    totalProducts: 'Total Products',
+    totalCategories: 'Categories',
+    totalOrders: 'Total Orders',
+    totalRevenue: 'Total Revenue',
+    recentOrders: 'Recent Orders',
+    lowStock: 'Low Stock Products',
+    allInStock: 'All products are in stock!',
+    noOrders: 'No orders yet',
+    orderNumber: 'Order #',
+    customer: 'Customer',
+    total: 'Total',
+    status: 'Status',
+    date: 'Date',
+    actions: 'Actions',
+    productManagement: 'Product Management',
+    addProduct: 'Add New Product',
+    cancel: 'Cancel',
+    edit: 'Edit',
+    delete: 'Delete',
+    mainImage: 'Main Image',
+    galleryImages: 'Gallery Images (Multiple)',
+    sku: 'SKU (Unique Code)',
+    price: 'Price (EGP)',
+    salePrice: 'Sale Price (Optional)',
+    category: 'Category',
+    selectCategory: '-- Select Category --',
+    titleEn: 'Title (English)',
+    titleAr: 'Title (Arabic)',
+    descEn: 'Description (English)',
+    descAr: 'Description (Arabic)',
+    dimensions: 'Dimensions (cm)',
+    width: 'Width',
+    height: 'Height',
+    depth: 'Depth',
+    materialsEn: 'Materials (English)',
+    materialsAr: 'Materials (Arabic)',
+    stockStatus: 'Stock Status',
+    inStock: 'In Stock',
+    outOfStock: 'Out of Stock',
+    quantity: 'Quantity',
+    newArrival: 'New Arrival',
+    featured: 'Featured',
+    saveProduct: 'Save Product',
+    saving: 'Saving...',
+    createProduct: 'Create New Product',
+    editProduct: 'Edit Product',
+    categoryManagement: 'Categories',
+    addCategory: 'Add Category',
+    nameEn: 'Name (English)',
+    nameAr: 'Name (Arabic)',
+    type: 'Type',
+    saveCategory: 'Save Category',
+    createCategory: 'Create New Category',
+    editCategory: 'Edit Category',
+    orderManagement: 'Order Management',
+    refreshOrders: 'Refresh Orders',
+    customerInfo: 'Customer Information',
+    name: 'Name',
+    email: 'Email',
+    phone: 'Phone',
+    shippingAddress: 'Shipping Address',
+    orderItems: 'Order Items',
+    subtotal: 'Subtotal',
+    shipping: 'Shipping',
+    updateStatus: 'Update Status',
+    notes: 'Notes',
+    pending: 'Pending',
+    processing: 'Processing',
+    shipped: 'Shipped',
+    delivered: 'Delivered',
+    cancelled: 'Cancelled',
+    active: 'Active',
+    draft: 'Draft',
+    inactive: 'Inactive',
+    noProducts: 'No products found. Add your first one!',
+    noCategories: 'No categories found. Add your first one!',
+    items: 'items',
+    left: 'left',
+  },
+  ar: {
+    login: 'تسجيل دخول المدير',
+    password: 'أدخل كلمة مرور المدير',
+    loginBtn: 'دخول',
+    dashboard: 'لوحة التحكم',
+    products: 'المنتجات',
+    categories: 'الأقسام',
+    orders: 'الطلبات',
+    totalProducts: 'إجمالي المنتجات',
+    totalCategories: 'الأقسام',
+    totalOrders: 'إجمالي الطلبات',
+    totalRevenue: 'إجمالي الإيرادات',
+    recentOrders: 'آخر الطلبات',
+    lowStock: 'منتجات قليلة المخزون',
+    allInStock: 'جميع المنتجات متوفرة! ✅',
+    noOrders: 'لا توجد طلبات بعد',
+    orderNumber: 'طلب #',
+    customer: 'العميل',
+    total: 'الإجمالي',
+    status: 'الحالة',
+    date: 'التاريخ',
+    actions: 'الإجراءات',
+    productManagement: 'إدارة المنتجات',
+    addProduct: 'إضافة منتج جديد',
+    cancel: 'إلغاء',
+    edit: 'تعديل',
+    delete: 'حذف',
+    mainImage: 'الصورة الرئيسية',
+    galleryImages: 'صور المعرض (متعددة)',
+    sku: 'رمز المنتج',
+    price: 'السعر (جنيه)',
+    salePrice: 'سعر التخفيض (اختياري)',
+    category: 'القسم',
+    selectCategory: '-- اختر القسم --',
+    titleEn: 'الاسم (إنجليزي)',
+    titleAr: 'الاسم (عربي)',
+    descEn: 'الوصف (إنجليزي)',
+    descAr: 'الوصف (عربي)',
+    dimensions: 'الأبعاد (سم)',
+    width: 'العرض',
+    height: 'الارتفاع',
+    depth: 'العمق',
+    materialsEn: 'المواد (إنجليزي)',
+    materialsAr: 'المواد (عربي)',
+    stockStatus: 'حالة المخزون',
+    inStock: 'متوفر',
+    outOfStock: 'نفذ',
+    quantity: 'الكمية',
+    newArrival: 'وصل حديثاً',
+    featured: 'مميز',
+    saveProduct: 'حفظ المنتج',
+    saving: 'جاري الحفظ...',
+    createProduct: 'إنشاء منتج جديد',
+    editProduct: 'تعديل المنتج',
+    categoryManagement: 'الأقسام',
+    addCategory: 'إضافة قسم',
+    nameEn: 'الاسم (إنجليزي)',
+    nameAr: 'الاسم (عربي)',
+    type: 'النوع',
+    saveCategory: 'حفظ القسم',
+    createCategory: 'إنشاء قسم جديد',
+    editCategory: 'تعديل القسم',
+    orderManagement: 'إدارة الطلبات',
+    refreshOrders: 'تحديث الطلبات',
+    customerInfo: 'معلومات العميل',
+    name: 'الاسم',
+    email: 'البريد الإلكتروني',
+    phone: 'الهاتف',
+    shippingAddress: 'عنوان الشحن',
+    orderItems: 'المنتجات المطلوبة',
+    subtotal: 'المجموع الفرعي',
+    shipping: 'الشحن',
+    updateStatus: 'تحديث الحالة',
+    notes: 'ملاحظات',
+    pending: 'قيد الانتظار',
+    processing: 'جاري التجهيز',
+    shipped: 'تم الشحن',
+    delivered: 'تم التوصيل',
+    cancelled: 'ملغي',
+    active: 'نشط',
+    draft: 'مسودة',
+    inactive: 'غير نشط',
+    noProducts: 'لا توجد منتجات. أضف أول منتج!',
+    noCategories: 'لا توجد أقسام. أضف أول قسم!',
+    items: 'منتجات',
+    left: 'متبقي',
+  }
+};
+
+export default function AdminPage({ params }) {
+  const routeParams = useParams();
+  const locale = routeParams?.locale || params?.locale || 'en';
+  const isRTL = locale === 'ar';
+  const t = translations[locale] || translations.en;
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
-  const [activeTab, setActiveTab] = useState('products'); // 'products' or 'orders'
+  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'products', 'orders', 'categories'
 
   // Products State
   const [products, setProducts] = useState([]);
@@ -20,6 +204,12 @@ export default function AdminPage() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [ordersLoading, setOrdersLoading] = useState(false);
 
+  // Categories State
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [categoryView, setCategoryView] = useState('list');
+
   // --- Auth & Data Fetching ---
 
   const handleLogin = (e) => {
@@ -28,6 +218,7 @@ export default function AdminPage() {
       setIsAuthenticated(true);
       fetchProducts();
       fetchOrders();
+      fetchCategories();
     } else {
       alert('Incorrect Password');
     }
@@ -86,6 +277,38 @@ export default function AdminPage() {
     }
   };
 
+  const fetchCategories = async () => {
+    setCategoriesLoading(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/categories`);
+      const data = await res.json();
+      if (data.success) {
+        setCategories(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    } finally {
+      setCategoriesLoading(false);
+    }
+  };
+
+  const handleDeleteCategory = async (id) => {
+    if (!confirm('Are you sure you want to delete this category?')) return;
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/categories/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        setCategories(categories.filter(c => c._id !== id));
+        alert('Category deleted successfully');
+      } else {
+        alert('Failed to delete category');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+    }
+  };
+
   // --- CRUD Operations ---
 
   const handleDelete = async (id) => {
@@ -120,19 +343,19 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center" dir={isRTL ? 'rtl' : 'ltr'}>
         <form onSubmit={handleLogin} className="bg-white p-8 rounded-xl shadow-lg w-96">
-          <h1 className="text-2xl font-bold text-center mb-6 text-deep-brown">Admin Login</h1>
+          <h1 className="text-2xl font-bold text-center mb-6 text-deep-brown">{t.login}</h1>
           <input
             type="password"
             autoComplete="new-password"
-            placeholder="Enter Password"
+            placeholder={t.password}
             className="w-full p-3 border rounded mb-4"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <button type="submit" className="w-full bg-deep-brown text-white py-3 rounded font-bold hover:bg-gold transition">
-            Login
+            {t.loginBtn}
           </button>
         </form>
       </div>
@@ -140,43 +363,63 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 md:px-8">
+    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 md:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="max-w-7xl mx-auto">
 
         {/* Tabs Navigation */}
-        <div className="flex gap-4 mb-6 border-b border-gray-200">
+        <div className="flex gap-2 md:gap-4 mb-6 border-b border-gray-200 overflow-x-auto pb-1">
+          <button
+            onClick={() => setActiveTab('dashboard')}
+            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
+              activeTab === 'dashboard'
+                ? 'text-deep-brown border-b-2 border-deep-brown'
+                : 'text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <FaChartBar className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.dashboard}
+          </button>
           <button
             onClick={() => { setActiveTab('products'); setView('list'); }}
-            className={`pb-3 px-4 font-semibold transition ${
+            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
               activeTab === 'products'
                 ? 'text-deep-brown border-b-2 border-deep-brown'
                 : 'text-gray-400 hover:text-gray-600'
             }`}
           >
-            <FaBoxOpen className="inline mr-2" /> Products
+            <FaBoxOpen className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.products} ({products.length})
+          </button>
+          <button
+            onClick={() => { setActiveTab('categories'); setCategoryView('list'); }}
+            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
+              activeTab === 'categories'
+                ? 'text-deep-brown border-b-2 border-deep-brown'
+                : 'text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <FaTags className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.categories} ({categories.length})
           </button>
           <button
             onClick={() => { setActiveTab('orders'); setSelectedOrder(null); }}
-            className={`pb-3 px-4 font-semibold transition ${
+            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
               activeTab === 'orders'
                 ? 'text-deep-brown border-b-2 border-deep-brown'
                 : 'text-gray-400 hover:text-gray-600'
             }`}
           >
-            <FaShoppingBag className="inline mr-2" /> Orders ({orders.length})
+            <FaShoppingBag className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.orders} ({orders.length})
           </button>
         </div>
 
         {/* Header */}
         {activeTab === 'products' && (
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-deep-brown">Product Management</h1>
+            <h1 className="text-3xl font-bold text-deep-brown">{t.productManagement}</h1>
             {view === 'list' && (
               <button
                   onClick={handleAddNew}
                   className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
               >
-                  <FaPlus /> Add New Product
+                  <FaPlus /> {t.addProduct}
               </button>
             )}
             {view === 'editor' && (
@@ -184,7 +427,7 @@ export default function AdminPage() {
                   onClick={() => setView('list')}
                   className="flex items-center gap-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition"
                >
-                  Cancel
+                  {t.cancel}
                </button>
             )}
           </div>
@@ -437,6 +680,165 @@ export default function AdminPage() {
           </div>
         )}
 
+        {/* Dashboard Content */}
+        {activeTab === 'dashboard' && (
+          <div className="space-y-6">
+            <h1 className="text-3xl font-bold text-deep-brown">Dashboard</h1>
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                <p className="text-gray-500 text-sm">Total Products</p>
+                <p className="text-3xl font-bold text-deep-brown">{products.length}</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                <p className="text-gray-500 text-sm">Categories</p>
+                <p className="text-3xl font-bold text-deep-brown">{categories.length}</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-yellow-500">
+                <p className="text-gray-500 text-sm">Total Orders</p>
+                <p className="text-3xl font-bold text-deep-brown">{orders.length}</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500">
+                <p className="text-gray-500 text-sm">Total Revenue</p>
+                <p className="text-3xl font-bold text-deep-brown">
+                  {orders.reduce((sum, o) => sum + (o.total || 0), 0).toLocaleString()} EGP
+                </p>
+              </div>
+            </div>
+
+            {/* Recent Orders */}
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <h2 className="text-xl font-bold mb-4">Recent Orders</h2>
+              {orders.length === 0 ? (
+                <p className="text-gray-400">No orders yet</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead className="text-gray-500 text-xs uppercase border-b">
+                      <tr>
+                        <th className="p-3">Order #</th>
+                        <th className="p-3">Customer</th>
+                        <th className="p-3">Total</th>
+                        <th className="p-3">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orders.slice(0, 5).map(order => (
+                        <tr key={order._id} className="border-b last:border-0">
+                          <td className="p-3 font-mono text-sm">{order.orderNumber || order._id.slice(-6)}</td>
+                          <td className="p-3">{order.customerName || '-'}</td>
+                          <td className="p-3 font-bold">{order.total?.toLocaleString()} EGP</td>
+                          <td className="p-3">
+                            <span className={`text-xs px-2 py-1 rounded ${
+                              order.status === 'delivered' ? 'bg-green-100 text-green-600' :
+                              order.status === 'pending' ? 'bg-gray-100 text-gray-600' :
+                              'bg-yellow-100 text-yellow-600'
+                            }`}>{order.status?.toUpperCase() || 'PENDING'}</span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* Low Stock Alert */}
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <h2 className="text-xl font-bold mb-4">⚠️ Low Stock Products</h2>
+              {products.filter(p => !p.inStock || (p.stockQuantity && p.stockQuantity < 5)).length === 0 ? (
+                <p className="text-green-600">All products are in stock! ✅</p>
+              ) : (
+                <div className="space-y-2">
+                  {products.filter(p => !p.inStock || (p.stockQuantity && p.stockQuantity < 5)).map(p => (
+                    <div key={p._id} className="flex justify-between items-center bg-red-50 p-3 rounded-lg">
+                      <span>{p.title_en}</span>
+                      <span className="text-red-600 font-bold">{p.inStock ? `${p.stockQuantity} left` : 'Out of Stock'}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Categories Content */}
+        {activeTab === 'categories' && categoryView === 'list' && (
+          <div>
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-3xl font-bold text-deep-brown">Categories</h1>
+              <button
+                onClick={() => { setEditingCategory(null); setCategoryView('editor'); }}
+                className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+              >
+                <FaPlus /> Add Category
+              </button>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+              {categoriesLoading ? (
+                <div className="p-8 text-center text-gray-500">Loading categories...</div>
+              ) : categories.length === 0 ? (
+                <div className="p-12 text-center text-gray-400">
+                  <FaTags size={48} className="mx-auto mb-4 opacity-50" />
+                  <p>No categories found. Add your first one!</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 uppercase text-xs">
+                      <tr>
+                        <th className="p-4">Name (EN)</th>
+                        <th className="p-4">Name (AR)</th>
+                        <th className="p-4">Type</th>
+                        <th className="p-4">Products</th>
+                        <th className="p-4">Status</th>
+                        <th className="p-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {categories.map(cat => (
+                        <tr key={cat._id} className="hover:bg-gray-50">
+                          <td className="p-4 font-medium">{cat.name_en}</td>
+                          <td className="p-4" dir="rtl">{cat.name_ar}</td>
+                          <td className="p-4 text-sm text-gray-500">{cat.type}</td>
+                          <td className="p-4">{cat.productCount || 0}</td>
+                          <td className="p-4">
+                            <span className={`text-xs font-bold px-2 py-1 rounded ${cat.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'}`}>
+                              {cat.status?.toUpperCase()}
+                            </span>
+                          </td>
+                          <td className="p-4 text-right">
+                            <button onClick={() => { setEditingCategory(cat); setCategoryView('editor'); }} className="text-blue-500 p-2 hover:bg-blue-50 rounded" title="Edit">
+                              <FaEdit />
+                            </button>
+                            <button onClick={() => handleDeleteCategory(cat._id)} className="text-red-500 p-2 hover:bg-red-50 rounded" title="Delete">
+                              <FaTrash />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Category Editor */}
+        {activeTab === 'categories' && categoryView === 'editor' && (
+          <CategoryEditor
+            initialData={editingCategory}
+            onCancel={() => setCategoryView('list')}
+            onSuccess={() => {
+              setCategoryView('list');
+              fetchCategories();
+            }}
+          />
+        )}
+
       </div>
     </div>
   );
@@ -455,6 +857,19 @@ function ProductEditor({ initialData, onCancel, onSuccess }) {
   // Image states
   const [imageFile, setImageFile] = useState(null);
   const [galleryFiles, setGalleryFiles] = useState([]);
+
+  // Categories for dropdown
+  const [availableCategories, setAvailableCategories] = useState([]);
+
+  useEffect(() => {
+    // Fetch categories for dropdown
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/categories`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setAvailableCategories(data.data);
+      })
+      .catch(err => console.error('Failed to load categories:', err));
+  }, []);
 
   const [formData, setFormData] = useState({
     title_en: '',
@@ -545,15 +960,10 @@ function ProductEditor({ initialData, onCancel, onSuccess }) {
         };
         data.append('dimensions', JSON.stringify(dimensions));
 
-        // Default category - Ensure it's a single string ID
-        let catId = formData.category;
-        if (Array.isArray(catId)) {
-            // If somehow got an array (e.g. ['','ID']), find the ID part
-            catId = catId.find(c => c && c.length > 10) || '6584281483321c2123456789';
+        // Handle Category from dropdown
+        if (formData.category) {
+            data.append('category', formData.category);
         }
-        if (!catId) catId = '6584281483321c2123456789';
-
-        data.append('category', String(catId));
 
         // Handle Main Image
         if (imageFile) {
@@ -647,7 +1057,7 @@ function ProductEditor({ initialData, onCancel, onSuccess }) {
             </div>
 
             {/* Basic Info */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">SKU (Unique Code)</label>
                     <input name="sku" value={formData.sku} onChange={handleChange} required className="input-field" placeholder="E.g. DW-TBL-001" />
@@ -655,6 +1065,15 @@ function ProductEditor({ initialData, onCancel, onSuccess }) {
                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Price (EGP)</label>
                     <input name="price" type="number" value={formData.price} onChange={handleChange} required className="input-field" />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                    <select name="category" value={formData.category} onChange={handleChange} required className="input-field">
+                        <option value="">-- Select Category --</option>
+                        {availableCategories.map(cat => (
+                            <option key={cat._id} value={cat._id}>{cat.name_en}</option>
+                        ))}
+                    </select>
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
@@ -687,6 +1106,47 @@ function ProductEditor({ initialData, onCancel, onSuccess }) {
                 <div dir="rtl">
                     <label className="block text-sm font-medium text-gray-700 mb-1">الوصف (عربي)</label>
                     <textarea name="description_ar" value={formData.description_ar} onChange={handleChange} rows="4" className="input-field" />
+                </div>
+            </div>
+
+            {/* Price & Sale Price */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Sale Price (Optional)</label>
+                    <input name="salePrice" type="number" value={formData.salePrice} onChange={handleChange} className="input-field" placeholder="Leave empty if no discount" />
+                </div>
+            </div>
+
+            {/* Dimensions */}
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">📐 Dimensions (cm)</label>
+                <div className="grid grid-cols-3 gap-4">
+                    <div>
+                        <label className="block text-xs text-gray-500 mb-1">Width</label>
+                        <input name="width" type="number" value={formData.width} onChange={handleChange} className="input-field" placeholder="0" />
+                    </div>
+                    <div>
+                        <label className="block text-xs text-gray-500 mb-1">Height</label>
+                        <input name="height" type="number" value={formData.height} onChange={handleChange} className="input-field" placeholder="0" />
+                    </div>
+                    <div>
+                        <label className="block text-xs text-gray-500 mb-1">Depth</label>
+                        <input name="depth" type="number" value={formData.depth} onChange={handleChange} className="input-field" placeholder="0" />
+                    </div>
+                </div>
+            </div>
+
+            {/* Materials */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">🪵 Materials (English)</label>
+                    <input name="materials_en" value={formData.materials_en} onChange={handleChange} className="input-field" placeholder="e.g. Oak, Walnut, Metal" />
+                    <p className="text-xs text-gray-400 mt-1">Separate with commas</p>
+                </div>
+                <div dir="rtl">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">🪵 المواد (عربي)</label>
+                    <input name="materials_ar" value={formData.materials_ar} onChange={handleChange} className="input-field" placeholder="مثال: خشب بلوط، جوز، معدن" />
+                    <p className="text-xs text-gray-400 mt-1">افصل بفاصلة</p>
                 </div>
             </div>
 
@@ -763,6 +1223,153 @@ function ProductEditor({ initialData, onCancel, onSuccess }) {
                 box-shadow: 0 0 0 1px #D4AF37;
             }
         `}</style>
+    </div>
+  );
+}
+
+// --- CategoryEditor Component ---
+
+function CategoryEditor({ initialData, onCancel, onSuccess }) {
+  const isEditMode = !!initialData;
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name_en: '',
+    name_ar: '',
+    description_en: '',
+    description_ar: '',
+    type: 'product',
+    status: 'active',
+    ...initialData
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const url = isEditMode
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/categories/${initialData._id}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/categories`;
+
+      const method = isEditMode ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        alert(isEditMode ? 'Category updated successfully!' : 'Category created successfully!');
+        onSuccess();
+      } else {
+        alert('Error: ' + (data.error || 'Saving failed'));
+      }
+
+    } catch (error) {
+      console.error('Save error:', error);
+      alert('Network error occurred.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
+      <h2 className="text-xl font-bold mb-6 text-deep-brown">
+        {isEditMode ? 'Edit Category' : 'Create New Category'}
+      </h2>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+
+        {/* Names */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Name (English) *</label>
+            <input
+              name="name_en"
+              value={formData.name_en}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border rounded-lg focus:ring-gold focus:border-gold outline-none"
+              placeholder="e.g. Tables"
+            />
+          </div>
+          <div dir="rtl">
+            <label className="block text-sm font-medium text-gray-700 mb-1">الاسم (عربي) *</label>
+            <input
+              name="name_ar"
+              value={formData.name_ar}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border rounded-lg focus:ring-gold focus:border-gold outline-none"
+              placeholder="مثال: طاولات"
+            />
+          </div>
+        </div>
+
+        {/* Descriptions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description (English)</label>
+            <textarea
+              name="description_en"
+              value={formData.description_en}
+              onChange={handleChange}
+              rows="3"
+              className="w-full p-3 border rounded-lg focus:ring-gold focus:border-gold outline-none"
+            />
+          </div>
+          <div dir="rtl">
+            <label className="block text-sm font-medium text-gray-700 mb-1">الوصف (عربي)</label>
+            <textarea
+              name="description_ar"
+              value={formData.description_ar}
+              onChange={handleChange}
+              rows="3"
+              className="w-full p-3 border rounded-lg focus:ring-gold focus:border-gold outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Type and Status */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <select name="type" value={formData.type} onChange={handleChange} className="w-full p-3 border rounded-lg">
+              <option value="product">Product</option>
+              <option value="project">Project</option>
+              <option value="both">Both</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select name="status" value={formData.status} onChange={handleChange} className="w-full p-3 border rounded-lg">
+              <option value="active">🟢 Active</option>
+              <option value="inactive">🔴 Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="pt-6 border-t flex justify-end gap-3">
+          <button type="button" onClick={onCancel} className="px-6 py-2 border rounded hover:bg-gray-50">Cancel</button>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="px-6 py-2 bg-deep-brown text-white rounded hover:bg-gold transition disabled:opacity-50"
+          >
+            {isLoading ? 'Saving...' : 'Save Category'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
