@@ -126,6 +126,21 @@ const translations = {
     usageLimit: 'Usage Limit',
     totalCoupons: 'Total Coupons',
     noCoupons: 'No coupons found. Add your first one!',
+    exportExcel: 'Export Excel',
+    refresh: 'Refresh',
+    loadingProducts: 'Loading products...',
+    loadingOrders: 'Loading orders...',
+    loadingCategories: 'Loading categories...',
+    loadingCoupons: 'Loading coupons...',
+    loadingCustomers: 'Loading customers...',
+    image: 'Image',
+    noData: '-',
+    printInvoice: 'Print Invoice',
+    viewDetails: 'View Details',
+    stock: 'Stock',
+    productsCount: 'Products',
+    statusActive: 'Active',
+    statusInactive: 'Inactive',
   },
   ar: {
     login: 'تسجيل دخول المدير',
@@ -246,6 +261,21 @@ const translations = {
     noCategories: 'لا توجد أقسام. أضف أول قسم!',
     items: 'منتجات',
     left: 'متبقي',
+    exportExcel: 'تصدير Excel',
+    refresh: 'تحديث',
+    loadingProducts: 'جاري تحميل المنتجات...',
+    loadingOrders: 'جاري تحميل الطلبات...',
+    loadingCategories: 'جاري تحميل الأقسام...',
+    loadingCoupons: 'جاري تحميل الكوبونات...',
+    loadingCustomers: 'جاري تحميل العملاء...',
+    image: 'الصورة',
+    noData: '-',
+    printInvoice: 'طباعة الفاتورة',
+    viewDetails: 'عرض التفاصيل',
+    stock: 'المخزون',
+    productsCount: 'المنتجات',
+    statusActive: 'نشط',
+    statusInactive: 'غير نشط',
   },
 };
 
@@ -689,77 +719,81 @@ export default function AdminPage({ params }) {
       <div className="max-w-7xl mx-auto">
 
         {/* Tabs Navigation */}
-        <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200 pb-3">
-          <button
-            onClick={() => setActiveTab('dashboard')}
-            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
-              activeTab === 'dashboard'
-                ? 'bg-deep-brown text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <FaChartBar className="text-sm" /> <span className="hidden sm:inline">{t.dashboard}</span>
-          </button>
-          <button
-            onClick={() => { setActiveTab('products'); setView('list'); }}
-            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
-              activeTab === 'products'
-                ? 'bg-deep-brown text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <FaBoxOpen className="text-sm" /> <span className="hidden sm:inline">{t.products}</span> <span className="text-xs">({products.length})</span>
-          </button>
-          <button
-            onClick={() => { setActiveTab('categories'); setCategoryView('list'); }}
-            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
-              activeTab === 'categories'
-                ? 'bg-deep-brown text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <FaTags className="text-sm" /> <span className="hidden sm:inline">{t.categories}</span> <span className="text-xs">({categories.length})</span>
-          </button>
-          <button
-            onClick={() => { setActiveTab('orders'); setSelectedOrder(null); }}
-            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
-              activeTab === 'orders'
-                ? 'bg-deep-brown text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <FaShoppingBag className="text-sm" /> <span className="hidden sm:inline">{t.orders}</span> <span className="text-xs">({orders.length})</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('customers')}
-            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
-              activeTab === 'customers'
-                ? 'bg-deep-brown text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <FaUsers className="text-sm" /> <span className="hidden sm:inline">{t.customers}</span> <span className="text-xs">({customers.length})</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('settings')}
-            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
-              activeTab === 'settings'
-                ? 'bg-deep-brown text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <FaCog className="text-sm" /> <span className="hidden sm:inline">{t.settings}</span>
-          </button>
-          <button
-            onClick={() => { setActiveTab('coupons'); setCouponView('list'); }}
-            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
-              activeTab === 'coupons'
-                ? 'bg-deep-brown text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <FaTags className="text-sm" /> <span className="hidden sm:inline">{t.coupons}</span> <span className="text-xs">({coupons.length})</span>
-          </button>
+        <div className="mb-6 border-b border-gray-200 pb-3">
+            {/* Desktop/Tablet View (Tabs) */}
+            <div className="hidden md:flex flex-wrap gap-2">
+                <button
+                    onClick={() => setActiveTab('dashboard')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${activeTab === 'dashboard' ? 'bg-deep-brown text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+                >
+                    <FaChartBar /> {t.dashboard}
+                </button>
+                <button
+                    onClick={() => { setActiveTab('products'); setView('list'); }}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${activeTab === 'products' ? 'bg-deep-brown text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+                >
+                    <FaBoxOpen /> {t.products} <span className="bg-white/20 px-1.5 py-0.5 rounded text-xs">{products.length}</span>
+                </button>
+                <button
+                    onClick={() => { setActiveTab('categories'); setCategoryView('list'); }}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${activeTab === 'categories' ? 'bg-deep-brown text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+                >
+                    <FaTags /> {t.categories} <span className="bg-white/20 px-1.5 py-0.5 rounded text-xs">{categories.length}</span>
+                </button>
+                <button
+                    onClick={() => { setActiveTab('orders'); setSelectedOrder(null); }}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${activeTab === 'orders' ? 'bg-deep-brown text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+                >
+                    <FaShoppingBag /> {t.orders} <span className="bg-white/20 px-1.5 py-0.5 rounded text-xs">{orders.length}</span>
+                </button>
+                <button
+                    onClick={() => setActiveTab('customers')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${activeTab === 'customers' ? 'bg-deep-brown text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+                >
+                    <FaUsers /> {t.customers} <span className="bg-white/20 px-1.5 py-0.5 rounded text-xs">{customers.length}</span>
+                </button>
+                <button
+                    onClick={() => { setActiveTab('coupons'); setCouponView('list'); }}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${activeTab === 'coupons' ? 'bg-deep-brown text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+                >
+                    <FaTags /> {t.coupons}
+                </button>
+                <button
+                    onClick={() => setActiveTab('settings')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${activeTab === 'settings' ? 'bg-deep-brown text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+                >
+                    <FaCog /> {t.settings}
+                </button>
+            </div>
+
+            {/* Mobile View (Dropdown) */}
+            <div className="md:hidden">
+                <div className="relative">
+                    <select
+                        value={activeTab}
+                        onChange={(e) => {
+                            const val = e.target.value;
+                            setActiveTab(val);
+                            if (val === 'products') setView('list');
+                            if (val === 'categories') setCategoryView('list');
+                            if (val === 'orders') setSelectedOrder(null);
+                            if (val === 'coupons') setCouponView('list');
+                        }}
+                        className="w-full appearance-none bg-white border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-deep-brown focus:border-deep-brown block p-3 pr-10 shadow-sm"
+                    >
+                        <option value="dashboard">{t.dashboard}</option>
+                        <option value="products">{t.products} ({products.length})</option>
+                        <option value="categories">{t.categories} ({categories.length})</option>
+                        <option value="orders">{t.orders} ({orders.length})</option>
+                        <option value="customers">{t.customers} ({customers.length})</option>
+                        <option value="coupons">{t.coupons}</option>
+                        <option value="settings">{t.settings}</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700">
+                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+            </div>
         </div>
 
         {/* Header */}
@@ -787,19 +821,19 @@ export default function AdminPage({ params }) {
 
         {activeTab === 'orders' && (
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-deep-brown">Order Management</h1>
+            <h1 className="text-3xl font-bold text-deep-brown">{t.orderManagement}</h1>
             <div className="flex gap-2">
                 <button
                 onClick={exportToExcel}
                 className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
                 >
-                Export Excel
+                {t.exportExcel}
                 </button>
                 <button
                 onClick={fetchOrders}
                 className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
                 >
-                Refresh
+                {t.refresh}
                 </button>
             </div>
           </div>
@@ -809,24 +843,25 @@ export default function AdminPage({ params }) {
         {activeTab === 'products' && view === 'list' && (
           <div className="bg-white rounded-xl shadow-sm overflow-hidden">
             {isLoading ? (
-                <div className="p-8 text-center text-gray-500">Loading products...</div>
+                <div className="p-8 text-center text-gray-500">{t.loadingProducts}</div>
             ) : products.length === 0 ? (
                 <div className="p-12 text-center text-gray-400">
                     <FaBoxOpen size={48} className="mx-auto mb-4 opacity-50" />
-                    <p>No products found. Add your first one!</p>
+                    <p>{t.noProducts}</p>
                 </div>
             ) : (
-                <div className="overflow-x-auto">
+              <>
+                <div className="overflow-x-auto hidden md:block">
                     <table className="w-full text-left border-collapse">
                         <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 uppercase text-xs">
                             <tr>
-                                <th className="p-4">Image</th>
-                                <th className="p-4">SKU</th>
-                                <th className="p-4">Name (EN)</th>
-                                <th className="p-4">Category</th>
-                                <th className="p-4">Price</th>
-                                <th className="p-4">Stock</th>
-                                <th className="p-4 text-right">Actions</th>
+                                <th className="p-4">{t.image}</th>
+                                <th className="p-4">{t.sku}</th>
+                                <th className="p-4">{t.titleEn}</th>
+                                <th className="p-4">{t.category}</th>
+                                <th className="p-4">{t.price}</th>
+                                <th className="p-4">{t.stock}</th>
+                                <th className="p-4 text-right">{t.actions}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
@@ -843,9 +878,9 @@ export default function AdminPage({ params }) {
                                     <td className="p-4 font-bold">{product.price.toLocaleString()} EGP</td>
                                     <td className="p-4">
                                         {product.inStock ? (
-                                            <span className="text-green-600 text-xs font-bold bg-green-100 px-2 py-1 rounded">In Stock</span>
+                                            <span className="text-green-600 text-xs font-bold bg-green-100 px-2 py-1 rounded">{t.inStock}</span>
                                         ) : (
-                                            <span className="text-red-600 text-xs font-bold bg-red-100 px-2 py-1 rounded">Out of Stock</span>
+                                            <span className="text-red-600 text-xs font-bold bg-red-100 px-2 py-1 rounded">{t.outOfStock}</span>
                                         )}
                                     </td>
                                     <td className="p-4 text-right">
@@ -861,6 +896,38 @@ export default function AdminPage({ params }) {
                         </tbody>
                     </table>
                 </div>
+
+                {/* Mobile Products Grid */}
+                <div className="grid grid-cols-1 gap-4 p-4 md:hidden bg-gray-50">
+                  {products.map(product => (
+                    <div key={product._id} className="bg-white p-4 rounded-xl shadow-sm flex gap-4">
+                      <div className="w-24 h-24 relative bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                          {product.image?.url && <Image src={product.image.url} alt="" fill className="object-cover" />}
+                      </div>
+                      <div className="flex-1 flex flex-col justify-between">
+                        <div>
+                            <div className="flex justify-between items-start">
+                                <h3 className="font-bold text-deep-brown line-clamp-2 text-sm md:text-base">{product.title_en}</h3>
+                                <div className="flex gap-1 shrink-0">
+                                    <button onClick={() => handleEdit(product)} className="text-blue-500 p-1.5 bg-blue-50 rounded-lg"><FaEdit size={14} /></button>
+                                    <button onClick={() => handleDelete(product._id)} className="text-red-500 p-1.5 bg-red-50 rounded-lg"><FaTrash size={14} /></button>
+                                </div>
+                            </div>
+                            <p className="text-xs text-gray-500 mb-1">{product.category?.name_en || '-'}</p>
+                        </div>
+                        <div className="flex justify-between items-end mt-2">
+                            <span className="font-bold text-lg text-deep-brown">{product.price.toLocaleString()} <span className="text-xs font-normal">EGP</span></span>
+                            {product.inStock ? (
+                                <span className="text-green-600 text-[10px] font-bold bg-green-100 px-2 py-1 rounded-full">{t.inStock}</span>
+                            ) : (
+                                <span className="text-red-600 text-[10px] font-bold bg-red-100 px-2 py-1 rounded-full">{t.outOfStock}</span>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         )}
@@ -881,64 +948,110 @@ export default function AdminPage({ params }) {
         {activeTab === 'orders' && (
           <div className="bg-white rounded-xl shadow-sm overflow-hidden">
             {ordersLoading ? (
-              <div className="p-8 text-center text-gray-500">Loading orders...</div>
+              <div className="p-8 text-center text-gray-500">{t.loadingOrders}</div>
             ) : orders.length === 0 ? (
               <div className="p-12 text-center text-gray-400">
                 <FaShoppingBag size={48} className="mx-auto mb-4 opacity-50" />
-                <p>No orders yet.</p>
+                <p>{t.noOrders}</p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 uppercase text-xs">
-                    <tr>
-                      <th className="p-4">Order #</th>
-                      <th className="p-4">Customer</th>
-                      <th className="p-4">Items</th>
-                      <th className="p-4">Total</th>
-                      <th className="p-4">Status</th>
-                      <th className="p-4">Date</th>
-                      <th className="p-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {orders.map(order => (
-                      <tr key={order._id} className="hover:bg-gray-50">
-                        <td className="p-4 font-mono text-sm font-bold">{order.orderNumber || order._id.slice(-6)}</td>
-                        <td className="p-4">
-                          <div className="font-medium">{order.customerName || '-'}</div>
-                          <div className="text-xs text-gray-400">{order.customerPhone || '-'}</div>
-                        </td>
-                        <td className="p-4">{order.items?.length || 0} items</td>
-                        <td className="p-4 font-bold">{order.total?.toLocaleString()} EGP</td>
-                        <td className="p-4">
-                          <span className={`text-xs font-bold px-2 py-1 rounded ${
-                            order.status === 'delivered' ? 'bg-green-100 text-green-600' :
-                            order.status === 'shipped' ? 'bg-blue-100 text-blue-600' :
-                            order.status === 'processing' ? 'bg-yellow-100 text-yellow-600' :
-                            order.status === 'cancelled' ? 'bg-red-100 text-red-600' :
-                            'bg-gray-100 text-gray-600'
-                          }`}>
-                            {order.status?.toUpperCase() || 'PENDING'}
-                          </span>
-                        </td>
-                        <td className="p-4 text-sm text-gray-500">
-                          {new Date(order.createdAt).toLocaleDateString()}
-                        </td>
-                        <td className="p-4 text-right">
-                          <button
-                            onClick={() => setSelectedOrder(order)}
-                            className="text-blue-500 p-2 hover:bg-blue-50 rounded"
-                            title="View Details"
-                          >
-                            <FaEye />
-                          </button>
-                        </td>
+              <>
+                <div className="overflow-x-auto hidden md:block">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 uppercase text-xs">
+                      <tr>
+                        <th className="p-4">{t.orderNumber}</th>
+                        <th className="p-4">{t.customer}</th>
+                        <th className="p-4">{t.items}</th>
+                        <th className="p-4">{t.total}</th>
+                        <th className="p-4">{t.status}</th>
+                        <th className="p-4">{t.date}</th>
+                        <th className="p-4 text-right">{t.actions}</th>
                       </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {orders.map(order => (
+                        <tr key={order._id} className="hover:bg-gray-50">
+                          <td className="p-4 font-mono text-sm font-bold">{order.orderNumber || order._id.slice(-6)}</td>
+                          <td className="p-4">
+                            <div className="font-medium">{order.customerName || '-'}</div>
+                            <div className="text-xs text-gray-400">{order.customerPhone || '-'}</div>
+                          </td>
+                          <td className="p-4">{order.items?.length || 0} {t.items}</td>
+                          <td className="p-4 font-bold">{order.total?.toLocaleString()} EGP</td>
+                          <td className="p-4">
+                            <span className={`text-xs font-bold px-2 py-1 rounded ${
+                              order.status === 'delivered' ? 'bg-green-100 text-green-600' :
+                              order.status === 'cancelled' ? 'bg-red-100 text-red-600' :
+                              'bg-yellow-100 text-yellow-600'
+                            }`}>
+                              {t[order.status] || order.status}
+                            </span>
+                          </td>
+                          <td className="p-4 text-gray-500 text-sm">
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </td>
+                          <td className="p-4 text-right">
+                             <button
+                               onClick={() => setSelectedOrder(order)}
+                               className="text-deep-brown hover:bg-gray-100 p-2 rounded"
+                             >
+                                <FaEye />
+                             </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Orders List */}
+                <div className="md:hidden space-y-4 p-4 bg-gray-50">
+                    {orders.map(order => (
+                        <div key={order._id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                            <div className="flex justify-between items-center mb-3 pb-3 border-b border-gray-100">
+                                <span className="font-bold text-lg text-deep-brown">#{order.orderNumber || order._id.slice(-6)}</span>
+                                <span className={`text-xs font-bold px-2 py-1 rounded-full ${
+                                    order.status === 'delivered' ? 'bg-green-100 text-green-600' :
+                                    order.status === 'cancelled' ? 'bg-red-100 text-red-600' :
+                                    'bg-yellow-100 text-yellow-600'
+                                }`}>
+                                    {t[order.status] || order.status}
+                                </span>
+                            </div>
+                            <div className="space-y-3 text-sm text-gray-600">
+                                <div className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                                    <div className="flex items-center gap-2">
+                                        <FaUsers className="text-gray-400" />
+                                        <span className="font-medium text-gray-900">{order.customerName}</span>
+                                    </div>
+                                    <span className="text-xs text-gray-500">{order.customerPhone}</span>
+                                </div>
+                                <div className="flex justify-between p-1">
+                                    <span>{t.total}:</span>
+                                    <span className="font-bold text-deep-brown text-base">{order.total?.toLocaleString()} EGP</span>
+                                </div>
+                                <div className="flex justify-between p-1">
+                                    <span>{t.items}:</span>
+                                    <span>{order.items?.length || 0} {t.items}</span>
+                                </div>
+                                <div className="flex justify-between p-1">
+                                    <span>{t.date}:</span>
+                                    <span>{new Date(order.createdAt).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                             <div className="mt-4 flex gap-2 justify-end pt-3 border-t border-gray-100">
+                                <button className="text-gray-500 border border-gray-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition flex items-center gap-2" onClick={() => handlePrintInvoice(order)}>
+                                    <FaShoppingBag size={12} /> {t.printInvoice}
+                                </button>
+                                <button className="bg-deep-brown text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-brown-700 transition flex items-center gap-2 shadow-sm" onClick={() => setSelectedOrder(order)}>
+                                    <FaEye size={12} /> {t.viewDetails}
+                                </button>
+                            </div>
+                        </div>
                     ))}
-                  </tbody>
-                </table>
-              </div>
+                </div>
+              </>
             )}
           </div>
         )}
@@ -1051,24 +1164,24 @@ export default function AdminPage({ params }) {
         {/* Dashboard Content */}
         {activeTab === 'dashboard' && (
           <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-deep-brown">Dashboard</h1>
+            <h1 className="text-3xl font-bold text-deep-brown">{t.dashboard}</h1>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
-                <p className="text-gray-500 text-sm">Total Products</p>
+                <p className="text-gray-500 text-sm">{t.totalProducts}</p>
                 <p className="text-3xl font-bold text-deep-brown">{products.length}</p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
-                <p className="text-gray-500 text-sm">Categories</p>
+                <p className="text-gray-500 text-sm">{t.totalCategories}</p>
                 <p className="text-3xl font-bold text-deep-brown">{categories.length}</p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-yellow-500">
-                <p className="text-gray-500 text-sm">Total Orders</p>
+                <p className="text-gray-500 text-sm">{t.totalOrders}</p>
                 <p className="text-3xl font-bold text-deep-brown">{orders.length}</p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500">
-                <p className="text-gray-500 text-sm">Total Revenue</p>
+                <p className="text-gray-500 text-sm">{t.totalRevenue}</p>
                 <p className="text-3xl font-bold text-deep-brown">
                   {orders.reduce((sum, o) => sum + (o.total || 0), 0).toLocaleString()} EGP
                 </p>
@@ -1077,18 +1190,18 @@ export default function AdminPage({ params }) {
 
             {/* Recent Orders */}
             <div className="bg-white p-6 rounded-xl shadow-sm">
-              <h2 className="text-xl font-bold mb-4">Recent Orders</h2>
+              <h2 className="text-xl font-bold mb-4">{t.recentOrders}</h2>
               {orders.length === 0 ? (
-                <p className="text-gray-400">No orders yet</p>
+                <p className="text-gray-400">{t.noOrders}</p>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left">
                     <thead className="text-gray-500 text-xs uppercase border-b">
                       <tr>
-                        <th className="p-3">Order #</th>
-                        <th className="p-3">Customer</th>
-                        <th className="p-3">Total</th>
-                        <th className="p-3">Status</th>
+                        <th className="p-3">{t.orderNumber}</th>
+                        <th className="p-3">{t.customer}</th>
+                        <th className="p-3">{t.total}</th>
+                        <th className="p-3">{t.status}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1102,7 +1215,7 @@ export default function AdminPage({ params }) {
                               order.status === 'delivered' ? 'bg-green-100 text-green-600' :
                               order.status === 'pending' ? 'bg-gray-100 text-gray-600' :
                               'bg-yellow-100 text-yellow-600'
-                            }`}>{order.status?.toUpperCase() || 'PENDING'}</span>
+                            }`}>{t[order.status] || order.status}</span>
                           </td>
                         </tr>
                       ))}
@@ -1114,15 +1227,15 @@ export default function AdminPage({ params }) {
 
             {/* Low Stock Alert */}
             <div className="bg-white p-6 rounded-xl shadow-sm">
-              <h2 className="text-xl font-bold mb-4">⚠️ Low Stock Products</h2>
+              <h2 className="text-xl font-bold mb-4">⚠️ {t.lowStock}</h2>
               {products.filter(p => !p.inStock || (p.stockQuantity && p.stockQuantity < 5)).length === 0 ? (
-                <p className="text-green-600">All products are in stock! ✅</p>
+                <p className="text-green-600">{t.allInStock}</p>
               ) : (
                 <div className="space-y-2">
                   {products.filter(p => !p.inStock || (p.stockQuantity && p.stockQuantity < 5)).map(p => (
                     <div key={p._id} className="flex justify-between items-center bg-red-50 p-3 rounded-lg">
                       <span>{p.title_en}</span>
-                      <span className="text-red-600 font-bold">{p.inStock ? `${p.stockQuantity} left` : 'Out of Stock'}</span>
+                      <span className="text-red-600 font-bold">{p.inStock ? `${p.stockQuantity} ${t.left}` : t.outOfStock}</span>
                     </div>
                   ))}
                 </div>
@@ -1135,34 +1248,34 @@ export default function AdminPage({ params }) {
         {activeTab === 'categories' && categoryView === 'list' && (
           <div>
             <div className="flex justify-between items-center mb-8">
-              <h1 className="text-3xl font-bold text-deep-brown">Categories</h1>
+              <h1 className="text-3xl font-bold text-deep-brown">{t.categoryManagement}</h1>
               <button
                 onClick={() => { setEditingCategory(null); setCategoryView('editor'); }}
                 className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
               >
-                <FaPlus /> Add Category
+                <FaPlus /> {t.addCategory}
               </button>
             </div>
 
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
               {categoriesLoading ? (
-                <div className="p-8 text-center text-gray-500">Loading categories...</div>
+                <div className="p-8 text-center text-gray-500">{t.loadingCategories}</div>
               ) : categories.length === 0 ? (
                 <div className="p-12 text-center text-gray-400">
                   <FaTags size={48} className="mx-auto mb-4 opacity-50" />
-                  <p>No categories found. Add your first one!</p>
+                  <p>{t.noCategories}</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 uppercase text-xs">
                       <tr>
-                        <th className="p-4">Name (EN)</th>
-                        <th className="p-4">Name (AR)</th>
-                        <th className="p-4">Type</th>
-                        <th className="p-4">Products</th>
-                        <th className="p-4">Status</th>
-                        <th className="p-4 text-right">Actions</th>
+                        <th className="p-4">{t.nameEn}</th>
+                        <th className="p-4">{t.nameAr}</th>
+                        <th className="p-4">{t.type}</th>
+                        <th className="p-4">{t.productsCount}</th>
+                        <th className="p-4">{t.status}</th>
+                        <th className="p-4 text-right">{t.actions}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
@@ -1174,7 +1287,7 @@ export default function AdminPage({ params }) {
                           <td className="p-4">{cat.productCount || 0}</td>
                           <td className="p-4">
                             <span className={`text-xs font-bold px-2 py-1 rounded ${cat.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'}`}>
-                              {cat.status?.toUpperCase()}
+                              {cat.status === 'active' ? t.statusActive : t.statusInactive}
                             </span>
                           </td>
                           <td className="p-4 text-right">
