@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { FaEdit, FaTrash, FaPlus, FaSearch, FaBoxOpen, FaImage, FaTimes, FaShoppingBag, FaEye, FaCheck, FaTags, FaChartBar, FaGlobe, FaUsers, FaCog } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaSearch, FaBoxOpen, FaImage, FaTimes, FaShoppingBag, FaEye, FaCheck, FaTags, FaChartBar, FaGlobe, FaUsers, FaCog, FaBars, FaSignOutAlt } from 'react-icons/fa';
 
 // Admin Translations
 const translations = {
@@ -288,6 +288,7 @@ export default function AdminPage({ params }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'products', 'orders', 'categories'
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Products State
   const [products, setProducts] = useState([]);
@@ -425,10 +426,25 @@ export default function AdminPage({ params }) {
 
   // --- Auth & Data Fetching ---
 
+  useEffect(() => {
+    const adminAuth = localStorage.getItem('adminAuth');
+    if (adminAuth === 'true') {
+      setIsAuthenticated(true);
+      // Load initial data
+      fetchProducts();
+      fetchOrders();
+      fetchCategories();
+      fetchCoupons();
+      fetchCustomers();
+      fetchSettings();
+    }
+  }, []);
+
   const handleLogin = (e) => {
     e.preventDefault();
     if (password === 'admin123') { // Simple hardcoded password for now
       setIsAuthenticated(true);
+      localStorage.setItem('adminAuth', 'true');
       fetchProducts();
       fetchOrders();
       fetchCategories();
@@ -438,6 +454,16 @@ export default function AdminPage({ params }) {
     } else {
       alert('Incorrect Password');
     }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('adminAuth');
+    setProducts([]);
+    setOrders([]);
+    setCategories([]);
+    setCoupons([]);
+    setCustomers([]);
   };
 
   const fetchProducts = async () => {
@@ -718,9 +744,22 @@ export default function AdminPage({ params }) {
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 md:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="max-w-7xl mx-auto">
 
-        {/* Tabs Navigation */}
-        <div className="mb-6 border-b border-gray-200 pb-3">
-            {/* Desktop/Tablet View (Tabs) */}
+        {/* Navigation & Header */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-gray-200 pb-3 gap-4">
+
+            {/* Mobile Menu Button */}
+            <div className="w-full md:w-auto flex justify-between items-center md:hidden">
+                <button
+                    onClick={() => setIsSidebarOpen(true)}
+                    className="p-2 text-deep-brown hover:bg-gray-100 rounded-lg"
+                >
+                    <FaBars size={24} />
+                </button>
+                <h1 className="text-lg font-bold text-deep-brown">{t.dashboard}</h1>
+                <div className="w-8"></div> {/* Spacer for alignment */}
+            </div>
+
+            {/* Desktop Tabs */}
             <div className="hidden md:flex flex-wrap gap-2">
                 <button
                     onClick={() => setActiveTab('dashboard')}
@@ -766,33 +805,77 @@ export default function AdminPage({ params }) {
                 </button>
             </div>
 
-            {/* Mobile View (Dropdown) */}
-            <div className="md:hidden">
-                <div className="relative">
-                    <select
-                        value={activeTab}
-                        onChange={(e) => {
-                            const val = e.target.value;
-                            setActiveTab(val);
-                            if (val === 'products') setView('list');
-                            if (val === 'categories') setCategoryView('list');
-                            if (val === 'orders') setSelectedOrder(null);
-                            if (val === 'coupons') setCouponView('list');
-                        }}
-                        className="w-full appearance-none bg-white border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-deep-brown focus:border-deep-brown block p-3 pr-10 shadow-sm"
-                    >
-                        <option value="dashboard">{t.dashboard}</option>
-                        <option value="products">{t.products} ({products.length})</option>
-                        <option value="categories">{t.categories} ({categories.length})</option>
-                        <option value="orders">{t.orders} ({orders.length})</option>
-                        <option value="customers">{t.customers} ({customers.length})</option>
-                        <option value="coupons">{t.coupons}</option>
-                        <option value="settings">{t.settings}</option>
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700">
-                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                    </div>
-                </div>
+            {/* Desktop Logout Information */}
+            <button onClick={handleLogout} className="hidden md:flex items-center gap-2 text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg transition">
+                <FaSignOutAlt /> {t.loginBtn === 'دخول' ? 'خروج' : 'Logout'}
+            </button>
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {isSidebarOpen && (
+            <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsSidebarOpen(false)}></div>
+        )}
+
+        {/* Mobile Sidebar */}
+        <div className={`fixed top-0 left-0 h-full w-64 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out md:hidden ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+                <h2 className="text-xl font-bold text-deep-brown">Menu</h2>
+                <button onClick={() => setIsSidebarOpen(false)} className="text-gray-500 hover:text-red-500">
+                    <FaTimes size={24} />
+                </button>
+            </div>
+            <div className="p-4 flex flex-col gap-2">
+                <button
+                    onClick={() => { setActiveTab('dashboard'); setIsSidebarOpen(false); }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition text-left ${activeTab === 'dashboard' ? 'bg-deep-brown text-white' : 'bg-gray-50 text-gray-700'}`}
+                >
+                    <FaChartBar size={20} /> {t.dashboard}
+                </button>
+                <button
+                    onClick={() => { setActiveTab('products'); setView('list'); setIsSidebarOpen(false); }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition text-left ${activeTab === 'products' ? 'bg-deep-brown text-white' : 'bg-gray-50 text-gray-700'}`}
+                >
+                    <FaBoxOpen size={20} /> {t.products}
+                </button>
+                <button
+                    onClick={() => { setActiveTab('categories'); setCategoryView('list'); setIsSidebarOpen(false); }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition text-left ${activeTab === 'categories' ? 'bg-deep-brown text-white' : 'bg-gray-50 text-gray-700'}`}
+                >
+                    <FaTags size={20} /> {t.categories}
+                </button>
+                <button
+                    onClick={() => { setActiveTab('orders'); setSelectedOrder(null); setIsSidebarOpen(false); }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition text-left ${activeTab === 'orders' ? 'bg-deep-brown text-white' : 'bg-gray-50 text-gray-700'}`}
+                >
+                    <FaShoppingBag size={20} /> {t.orders}
+                </button>
+                <button
+                    onClick={() => { setActiveTab('customers'); setIsSidebarOpen(false); }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition text-left ${activeTab === 'customers' ? 'bg-deep-brown text-white' : 'bg-gray-50 text-gray-700'}`}
+                >
+                    <FaUsers size={20} /> {t.customers}
+                </button>
+                <button
+                    onClick={() => { setActiveTab('coupons'); setCouponView('list'); setIsSidebarOpen(false); }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition text-left ${activeTab === 'coupons' ? 'bg-deep-brown text-white' : 'bg-gray-50 text-gray-700'}`}
+                >
+                    <FaTags size={20} /> {t.coupons}
+                </button>
+                <button
+                    onClick={() => { setActiveTab('settings'); setIsSidebarOpen(false); }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition text-left ${activeTab === 'settings' ? 'bg-deep-brown text-white' : 'bg-gray-50 text-gray-700'}`}
+                >
+                    <FaCog size={20} /> {t.settings}
+                </button>
+
+                <div className="my-2 border-t border-gray-100"></div>
+
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition text-left text-red-600 bg-red-50 hover:bg-red-100"
+                >
+                    <FaSignOutAlt size={20} /> {t.loginBtn === 'دخول' ? 'خروج' : 'Logout'}
+                </button>
             </div>
         </div>
 
