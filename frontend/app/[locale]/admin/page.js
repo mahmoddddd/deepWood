@@ -689,76 +689,76 @@ export default function AdminPage({ params }) {
       <div className="max-w-7xl mx-auto">
 
         {/* Tabs Navigation */}
-        <div className="flex gap-2 md:gap-4 mb-6 border-b border-gray-200 overflow-x-auto pb-1">
+        <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200 pb-3">
           <button
             onClick={() => setActiveTab('dashboard')}
-            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
+            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
               activeTab === 'dashboard'
-                ? 'text-deep-brown border-b-2 border-deep-brown'
-                : 'text-gray-400 hover:text-gray-600'
+                ? 'bg-deep-brown text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            <FaChartBar className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.dashboard}
+            <FaChartBar className="text-sm" /> <span className="hidden sm:inline">{t.dashboard}</span>
           </button>
           <button
             onClick={() => { setActiveTab('products'); setView('list'); }}
-            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
+            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
               activeTab === 'products'
-                ? 'text-deep-brown border-b-2 border-deep-brown'
-                : 'text-gray-400 hover:text-gray-600'
+                ? 'bg-deep-brown text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            <FaBoxOpen className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.products} ({products.length})
+            <FaBoxOpen className="text-sm" /> <span className="hidden sm:inline">{t.products}</span> <span className="text-xs">({products.length})</span>
           </button>
           <button
             onClick={() => { setActiveTab('categories'); setCategoryView('list'); }}
-            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
+            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
               activeTab === 'categories'
-                ? 'text-deep-brown border-b-2 border-deep-brown'
-                : 'text-gray-400 hover:text-gray-600'
+                ? 'bg-deep-brown text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            <FaTags className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.categories} ({categories.length})
+            <FaTags className="text-sm" /> <span className="hidden sm:inline">{t.categories}</span> <span className="text-xs">({categories.length})</span>
           </button>
           <button
             onClick={() => { setActiveTab('orders'); setSelectedOrder(null); }}
-            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
+            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
               activeTab === 'orders'
-                ? 'text-deep-brown border-b-2 border-deep-brown'
-                : 'text-gray-400 hover:text-gray-600'
+                ? 'bg-deep-brown text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            <FaShoppingBag className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.orders} ({orders.length})
+            <FaShoppingBag className="text-sm" /> <span className="hidden sm:inline">{t.orders}</span> <span className="text-xs">({orders.length})</span>
           </button>
           <button
             onClick={() => setActiveTab('customers')}
-            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
+            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
               activeTab === 'customers'
-                ? 'text-deep-brown border-b-2 border-deep-brown'
-                : 'text-gray-400 hover:text-gray-600'
+                ? 'bg-deep-brown text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            <FaUsers className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.customers} ({customers.length})
+            <FaUsers className="text-sm" /> <span className="hidden sm:inline">{t.customers}</span> <span className="text-xs">({customers.length})</span>
           </button>
           <button
             onClick={() => setActiveTab('settings')}
-            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
+            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
               activeTab === 'settings'
-                ? 'text-deep-brown border-b-2 border-deep-brown'
-                : 'text-gray-400 hover:text-gray-600'
+                ? 'bg-deep-brown text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            <FaCog className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.settings}
+            <FaCog className="text-sm" /> <span className="hidden sm:inline">{t.settings}</span>
           </button>
           <button
             onClick={() => { setActiveTab('coupons'); setCouponView('list'); }}
-            className={`pb-3 px-3 md:px-4 font-semibold transition whitespace-nowrap ${
+            className={`flex items-center gap-1 pb-2 px-2 md:px-4 text-xs md:text-sm font-semibold transition rounded-lg ${
               activeTab === 'coupons'
-                ? 'text-deep-brown border-b-2 border-deep-brown'
-                : 'text-gray-400 hover:text-gray-600'
+                ? 'bg-deep-brown text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            <FaTags className={`inline ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t.coupons} ({coupons.length})
+            <FaTags className="text-sm" /> <span className="hidden sm:inline">{t.coupons}</span> <span className="text-xs">({coupons.length})</span>
           </button>
         </div>
 
