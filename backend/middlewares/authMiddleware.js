@@ -59,4 +59,5 @@ const authorize = (...roles) => {
 module.exports = {
   protect,
   authorize,
+  restrictTo: authorize, // Alias for compatibility
 };
