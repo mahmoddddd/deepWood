@@ -23,6 +23,8 @@ app.use(cors({
     'http://localhost:3000',
     'https://deep-wood-frontend.vercel.app',
     'https://deep-wood.vercel.app',
+    'https://deepwood.online',
+    'https://www.deepwood.online',
     /\.vercel\.app$/
   ],
   credentials: true,
