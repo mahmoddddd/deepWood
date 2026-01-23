@@ -54,6 +54,8 @@ app.use('/api/coupons', require('./routes/couponRoutes'));
 app.use('/api/customers', require('./routes/customerRoutes'));
 app.use('/api/settings', require('./routes/settingsRoutes'));
 app.use('/api/reviews', require('./routes/reviewRoutes'));
+app.use('/api/gallery', require('./routes/galleryImageRoutes'));
+app.use('/api/site-images', require('./routes/siteImageRoutes'));
 
 // Error handler
 app.use(errorHandler);

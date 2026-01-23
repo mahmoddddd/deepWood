@@ -1,4 +1,5 @@
 const Project = require('../models/Project');
+const Client = require('../models/Client');
 const { asyncHandler, AppError } = require('../middlewares/errorMiddleware');
 const ApiFeatures = require('../utils/apiFeatures');
 const { uploadToCloudinary, deleteFromCloudinary } = require('../utils/cloudinary');
@@ -16,6 +17,18 @@ exports.getProjects = asyncHandler(async (req, res, next) => {
     .limitFields()
     .paginate();
 
+    const createdClients = [];
+    for (const data of clientsData) {
+      const client = await Client.findOneAndUpdate(
+        { name_en: data.name_en },
+        data,
+        { upsert: true, new: true, runValidators: true }
+      );
+      createdClients.push(client);
+    }
+
+    const clientMap = {}; // name -> _id
+    createdClients.forEach(c => clientMap[c.name_en] = c._id);
   const projects = await features.query
     .populate('category', 'name_en name_ar slug')
     .populate('client', 'name_en name_ar logo');
@@ -365,4 +378,136 @@ exports.deleteProject = asyncHandler(async (req, res, next) => {
     success: true,
     data: {},
   });
+});
+
+/**
+ * @desc    Seed projects and clients
+ * @route   POST /api/projects/seed
+ * @access  Admin
+ */
+exports.seedProjects = asyncHandler(async (req, res, next) => {
+  try {
+    const existingProjects = await Project.countDocuments();
+    if (existingProjects > 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Projects already seeded',
+      });
+    }
+
+    // 1. Create/Find Clients
+    const clientsData = [
+      { name_en: 'Toyota Egypt', name_ar: 'تويوتا مصر', isCorporate: true },
+      { name_en: 'Toshiba El Araby', name_ar: 'توشيبا العربي', isCorporate: true },
+      { name_en: 'Tornado', name_ar: 'تورنيدو', isCorporate: true },
+      { name_en: 'Private Villa', name_ar: 'فيلا خاصة', isCorporate: false },
+      { name_en: 'Private Home', name_ar: 'منزل خاص', isCorporate: false },
+    ];
+
+    const createdClients = [];
+    for (const data of clientsData) {
+      const client = await Client.findOneAndUpdate(
+        { name_en: data.name_en },
+        data,
+        { upsert: true, new: true, runValidators: true }
+      );
+      createdClients.push(client);
+    }
+
+    const clientMap = {}; // name -> _id
+    createdClients.forEach(c => clientMap[c.name_en] = c._id);
+
+    // 2. Create Projects
+    const projectsData = [
+      // Corporate
+      {
+        title_en: 'Toyota Showroom',
+        title_ar: 'معرض تويوتا',
+        description_en: 'Complete showroom furniture and displays',
+        description_ar: 'تأثيث كامل للمعرض والديسبلاي',
+        clientName: 'Toyota Egypt',
+        projectType: 'corporate',
+        isCorporate: true,
+        image: { url: '/imagesss/furnature/WhatsApp Image 2025-12-20 at 12.43.13 AM.jpeg' },
+        featured: true
+      },
+      {
+        title_en: 'Toshiba Office',
+        title_ar: 'مكاتب توشيبا',
+        description_en: 'Executive office furniture',
+        description_ar: 'أثاث مكاتب تنفيذية',
+        clientName: 'Toshiba El Araby',
+        projectType: 'corporate',
+        isCorporate: true,
+        image: { url: '/imagesss/furnature/WhatsApp Image 2025-12-20 at 12.43.13 AM (1).jpeg' },
+        featured: true
+      },
+      {
+        title_en: 'Tornado Exhibition',
+        title_ar: 'معرض تورنيدو',
+        description_en: 'Exhibition stands and displays',
+        description_ar: 'ستاندات المعارض والعروض',
+        clientName: 'Tornado',
+        projectType: 'corporate',
+        isCorporate: true,
+        image: { url: '/imagesss/furnature/WhatsApp Image 2025-12-20 at 12.43.13 AM (2).jpeg' },
+        featured: false
+      },
+      // Residential
+      {
+        title_en: 'Modern Living Room',
+        title_ar: 'غرفة معيشة عصرية',
+        description_en: 'Custom living room furniture',
+        description_ar: 'أثاث غرفة معيشة مخصص',
+        clientName: 'Private Villa',
+        projectType: 'residential',
+        isCorporate: false,
+        image: { url: '/imagesss/furnature/WhatsApp Image 2025-12-20 at 12.43.13 AM (3).jpeg' },
+        featured: true
+      },
+      {
+        title_en: 'Luxury Bedroom',
+        title_ar: 'غرفة نوم فاخرة',
+        description_en: 'Master bedroom set',
+        description_ar: 'طقم غرفة نوم رئيسية',
+        clientName: 'Private Home',
+        projectType: 'residential',
+        isCorporate: false,
+        image: { url: '/imagesss/furnature/WhatsApp Image 2025-12-20 at 12.43.14 AM.jpeg' },
+        featured: true
+      },
+      {
+        title_en: 'Dining Room',
+        title_ar: 'غرفة طعام',
+        description_en: 'Elegant dining furniture',
+        description_ar: 'أثاث سفرة أنيق',
+        clientName: 'Private Home',
+        projectType: 'residential',
+        isCorporate: false,
+        image: { url: '/imagesss/furnature/WhatsApp Image 2025-12-20 at 12.43.14 AM (1).jpeg' },
+        featured: false
+      },
+    ];
+
+    // Map clients and insert
+    const projectsToInsert = projectsData.map(p => ({
+      ...p,
+      client: clientMap[p.clientName], // Set ObjectId
+      clientName: undefined // Remove temp field
+    }));
+
+    await Project.create(projectsToInsert);
+
+    res.status(201).json({
+      success: true,
+      message: 'Projects and clients seeded successfully',
+      data: projectsToInsert
+    });
+  } catch (error) {
+    console.error('Seed projects error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Server error',
+    });
+  }
 });

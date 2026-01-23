@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { FaEdit, FaTrash, FaPlus, FaSearch, FaBoxOpen, FaImage, FaTimes, FaShoppingBag, FaEye, FaCheck, FaTags, FaChartBar, FaGlobe, FaUsers, FaCog, FaBars, FaSignOutAlt } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaSearch, FaBoxOpen, FaImage, FaTimes, FaShoppingBag, FaEye, FaCheck, FaTags, FaChartBar, FaGlobe, FaUsers, FaCog, FaBars, FaSignOutAlt, FaBriefcase } from 'react-icons/fa';
 
 // Admin Translations
 const translations = {
@@ -141,6 +141,55 @@ const translations = {
     productsCount: 'Products',
     statusActive: 'Active',
     statusInactive: 'Inactive',
+    gallery: 'Gallery',
+    galleryManagement: 'Gallery Management',
+    addImage: 'Add Image',
+    editImage: 'Edit Image',
+    captionEn: 'Caption (English)',
+    captionAr: 'Caption (Arabic)',
+    altText: 'Alt Text',
+    noGalleryImages: 'No images found. Add your first one!',
+    loadingGallery: 'Loading gallery...',
+    allCategories: 'All Categories',
+    livingRoom: 'Living Room',
+    bedroom: 'Bedroom',
+    diningRoom: 'Dining Room',
+    officeRoom: 'Office',
+    kitchenRoom: 'Kitchen',
+    saveImage: 'Save Image',
+    uploadImage: 'Upload Image',
+    siteImages: 'Site Images',
+    siteImagesManagement: 'Site Images Management',
+    pageFilter: 'Page',
+    sectionFilter: 'Section',
+    imageKey: 'Image Key',
+    seedImages: 'Seed Default Images',
+    noSiteImages: 'No site images found.',
+    loadingSiteImages: 'Loading site images...',
+    homePage: 'Home Page',
+    aboutPage: 'About Page',
+    galleryPage: 'Gallery Page',
+    heroSection: 'Hero Section',
+    beforeAfterSection: 'Before/After Section',
+    allPages: 'All Pages',
+    allSections: 'All Sections',
+    projects: 'Projects',
+    projectManagement: 'Project Management',
+    addProject: 'Add Project',
+    editProject: 'Edit Project',
+    projectType: 'Project Type',
+    client: 'Client',
+    completionDate: 'Completion Date',
+    isCorporate: 'Is Corporate?',
+    featured: 'Featured?',
+    mainImage: 'Main Image',
+    beforeImage: 'Before Image',
+    afterImage: 'After Image',
+    galleryImages: 'Gallery Images',
+    residential: 'Residential',
+    corporate: 'Corporate',
+    custom: 'Custom',
+    antique: 'Antique',
   },
   ar: {
     login: 'تسجيل دخول المدير',
@@ -276,6 +325,55 @@ const translations = {
     productsCount: 'المنتجات',
     statusActive: 'نشط',
     statusInactive: 'غير نشط',
+    gallery: 'الصور',
+    galleryManagement: 'إدارة الصور',
+    addImage: 'إضافة صورة',
+    editImage: 'تعديل الصورة',
+    captionEn: 'الوصف (إنجليزي)',
+    captionAr: 'الوصف (عربي)',
+    altText: 'النص البديل',
+    noGalleryImages: 'لا توجد صور. أضف أول صورة!',
+    loadingGallery: 'جاري تحميل الصور...',
+    allCategories: 'جميع الفئات',
+    livingRoom: 'غرفة المعيشة',
+    bedroom: 'غرفة النوم',
+    diningRoom: 'غرفة الطعام',
+    officeRoom: 'المكتب',
+    kitchenRoom: 'المطبخ',
+    saveImage: 'حفظ الصورة',
+    uploadImage: 'رفع صورة',
+    siteImages: 'صور الموقع',
+    siteImagesManagement: 'إدارة صور الموقع',
+    pageFilter: 'الصفحة',
+    sectionFilter: 'القسم',
+    imageKey: 'مفتاح الصورة',
+    seedImages: 'إضافة الصور الافتراضية',
+    noSiteImages: 'لا توجد صور للموقع.',
+    loadingSiteImages: 'جاري تحميل صور الموقع...',
+    homePage: 'الصفحة الرئيسية',
+    aboutPage: 'من نحن',
+    galleryPage: 'المعرض',
+    heroSection: 'قسم الهيرو',
+    beforeAfterSection: 'قبل وبعد',
+    allPages: 'كل الصفحات',
+    allSections: 'كل الأقسام',
+    projects: 'المشاريع',
+    projectManagement: 'إدارة المشاريع',
+    addProject: 'إضافة مشروع',
+    editProject: 'تعديل مشروع',
+    projectType: 'نوع المشروع',
+    client: 'العميل',
+    completionDate: 'تاريخ الإنجاز',
+    isCorporate: 'مؤسسي؟',
+    featured: 'مميز؟',
+    mainImage: 'الصورة الرئيسية',
+    beforeImage: 'صورة قبل',
+    afterImage: 'صورة بعد',
+    galleryImages: 'صور المعرض',
+    residential: 'سكني',
+    corporate: 'مؤسسي',
+    custom: 'مخصص',
+    antique: 'أنتيك',
   },
 };
 
@@ -329,6 +427,160 @@ export default function AdminPage({ params }) {
       console.error('Failed to fetch customers:', error);
     } finally {
         setCustomersLoading(false);
+    }
+  };
+
+  // Gallery State
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [galleryLoading, setGalleryLoading] = useState(false);
+  const [editingGalleryImage, setEditingGalleryImage] = useState(null);
+  const [galleryView, setGalleryView] = useState('list');
+  const [galleryFilter, setGalleryFilter] = useState('all');
+
+  const fetchGalleryImages = async () => {
+    setGalleryLoading(true);
+    try {
+      const url = galleryFilter === 'all'
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/gallery`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/gallery?category=${galleryFilter}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.success) {
+        setGalleryImages(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch gallery images:', error);
+    } finally {
+      setGalleryLoading(false);
+    }
+  };
+
+  const handleDeleteGalleryImage = async (id) => {
+    if (!confirm(locale === 'ar' ? 'هل أنت متأكد من حذف هذه الصورة؟' : 'Are you sure you want to delete this image?')) return;
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/gallery/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        setGalleryImages(galleryImages.filter(img => img._id !== id));
+        alert(locale === 'ar' ? 'تم حذف الصورة بنجاح' : 'Image deleted successfully');
+      } else {
+        alert(locale === 'ar' ? 'فشل حذف الصورة' : 'Failed to delete image');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+    }
+  };
+
+  // Refetch gallery when filter changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchGalleryImages();
+    }
+  }, [galleryFilter]);
+
+  // Site Images State
+  const [siteImages, setSiteImages] = useState([]);
+  const [siteImagesLoading, setSiteImagesLoading] = useState(false);
+  const [editingSiteImage, setEditingSiteImage] = useState(null);
+  const [siteImagesView, setSiteImagesView] = useState('list');
+  const [siteImagePageFilter, setSiteImagePageFilter] = useState('all');
+
+  const fetchSiteImages = async () => {
+    setSiteImagesLoading(true);
+    try {
+      const url = siteImagePageFilter === 'all'
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/site-images`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/site-images?page=${siteImagePageFilter}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.success) {
+        setSiteImages(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch site images:', error);
+    } finally {
+      setSiteImagesLoading(false);
+    }
+  };
+
+  const handleSeedSiteImages = async () => {
+    if (!confirm(locale === 'ar' ? 'هل تريد إضافة الصور الافتراضية؟' : 'Seed default site images?')) return;
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/site-images/seed`, {
+        method: 'POST'
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(locale === 'ar' ? `تم إضافة ${data.count} صورة` : `Seeded ${data.count} images`);
+        fetchSiteImages();
+      } else {
+        alert(data.error || (locale === 'ar' ? 'فشل الإضافة' : 'Failed to seed'));
+      }
+    } catch (error) {
+      console.error('Seed error:', error);
+    }
+  };
+
+  const handleDeleteSiteImage = async (id) => {
+    if (!confirm(locale === 'ar' ? 'هل أنت متأكد من حذف هذه الصورة؟' : 'Are you sure you want to delete this image?')) return;
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/site-images/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        setSiteImages(siteImages.filter(img => img._id !== id));
+        alert(locale === 'ar' ? 'تم حذف الصورة بنجاح' : 'Image deleted successfully');
+      } else {
+        alert(locale === 'ar' ? 'فشل حذف الصورة' : 'Failed to delete image');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+    }
+  };
+
+  // Refetch site images when filter changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchSiteImages();
+    }
+  }, [siteImagePageFilter]);
+
+  // Projects State
+  const [projects, setProjects] = useState([]);
+  const [projectsLoading, setProjectsLoading] = useState(false);
+  const [editingProject, setEditingProject] = useState(null);
+  const [projectsView, setProjectsView] = useState('list');
+
+  const fetchProjects = async () => {
+    setProjectsLoading(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/projects`);
+      const data = await res.json();
+      if (data.success) {
+        setProjects(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch projects:', error);
+    } finally {
+      setProjectsLoading(false);
+    }
+  };
+
+  const handleDeleteProject = async (id) => {
+    if (!confirm(locale === 'ar' ? 'هل أنت متأكد من حذف هذا المشروع؟' : 'Are you sure you want to delete this project?')) return;
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/projects/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        setProjects(projects.filter(p => p._id !== id));
+        alert(locale === 'ar' ? 'تم حذف المشروع بنجاح' : 'Project deleted successfully');
+      } else {
+        alert(locale === 'ar' ? 'فشل حذف المشروع' : 'Failed to delete project');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
     }
   };
 
@@ -437,6 +689,9 @@ export default function AdminPage({ params }) {
       fetchCoupons();
       fetchCustomers();
       fetchSettings();
+      fetchGalleryImages();
+      fetchSiteImages();
+      fetchProjects();
     }
   }, []);
 
@@ -451,6 +706,9 @@ export default function AdminPage({ params }) {
       fetchCoupons();
       fetchCustomers();
       fetchSettings();
+      fetchGalleryImages();
+      fetchSiteImages();
+      fetchProjects();
     } else {
       alert('Incorrect Password');
     }
@@ -792,6 +1050,24 @@ export default function AdminPage({ params }) {
                     <FaUsers /> {t.customers} <span className="bg-white/20 px-1.5 py-0.5 rounded text-xs">{customers.length}</span>
                 </button>
                 <button
+                    onClick={() => { setActiveTab('gallery'); setGalleryView('list'); }}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${activeTab === 'gallery' ? 'bg-deep-brown text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+                >
+                    <FaImage /> {t.gallery} <span className="bg-white/20 px-1.5 py-0.5 rounded text-xs">{galleryImages.length}</span>
+                </button>
+                <button
+                    onClick={() => { setActiveTab('siteImages'); setSiteImagesView('list'); }}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${activeTab === 'siteImages' ? 'bg-deep-brown text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+                >
+                    <FaImage /> {t.siteImages} <span className="bg-white/20 px-1.5 py-0.5 rounded text-xs">{siteImages.length}</span>
+                </button>
+                <button
+                    onClick={() => { setActiveTab('projects'); setProjectsView('list'); }}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${activeTab === 'projects' ? 'bg-deep-brown text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+                >
+                    <FaBriefcase /> {t.projects} <span className="bg-white/20 px-1.5 py-0.5 rounded text-xs">{projects.length}</span>
+                </button>
+                <button
                     onClick={() => { setActiveTab('coupons'); setCouponView('list'); }}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${activeTab === 'coupons' ? 'bg-deep-brown text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
                 >
@@ -854,6 +1130,24 @@ export default function AdminPage({ params }) {
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition text-left ${activeTab === 'customers' ? 'bg-deep-brown text-white' : 'bg-gray-50 text-gray-700'}`}
                 >
                     <FaUsers size={20} /> {t.customers}
+                </button>
+                <button
+                    onClick={() => { setActiveTab('gallery'); setGalleryView('list'); setIsSidebarOpen(false); }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition text-left ${activeTab === 'gallery' ? 'bg-deep-brown text-white' : 'bg-gray-50 text-gray-700'}`}
+                >
+                    <FaImage size={20} /> {t.gallery}
+                </button>
+                <button
+                    onClick={() => { setActiveTab('siteImages'); setSiteImagesView('list'); setIsSidebarOpen(false); }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition text-left ${activeTab === 'siteImages' ? 'bg-deep-brown text-white' : 'bg-gray-50 text-gray-700'}`}
+                >
+                    <FaImage size={20} /> {t.siteImages}
+                </button>
+                <button
+                    onClick={() => { setActiveTab('projects'); setProjectsView('list'); setIsSidebarOpen(false); }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition text-left ${activeTab === 'projects' ? 'bg-deep-brown text-white' : 'bg-gray-50 text-gray-700'}`}
+                >
+                    <FaBriefcase size={20} /> {t.projects}
                 </button>
                 <button
                     onClick={() => { setActiveTab('coupons'); setCouponView('list'); setIsSidebarOpen(false); }}
@@ -1674,6 +1968,326 @@ export default function AdminPage({ params }) {
                     setCouponView('list');
                 }}
              />
+        )}
+
+        {/* Gallery Management */}
+        {activeTab === 'gallery' && galleryView === 'list' && (
+          <div>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+              <h1 className="text-2xl font-bold text-deep-brown">{t.galleryManagement}</h1>
+              <div className="flex flex-wrap items-center gap-3">
+                <select
+                  value={galleryFilter}
+                  onChange={(e) => setGalleryFilter(e.target.value)}
+                  className="p-2 border rounded-lg bg-white"
+                >
+                  <option value="all">{t.allCategories}</option>
+                  <option value="living-room">{t.livingRoom}</option>
+                  <option value="bedroom">{t.bedroom}</option>
+                  <option value="dining">{t.diningRoom}</option>
+                  <option value="office">{t.officeRoom}</option>
+                  <option value="kitchen">{t.kitchenRoom}</option>
+                </select>
+                <button
+                  onClick={fetchGalleryImages}
+                  className="flex items-center gap-2 bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
+                >
+                  {t.refresh}
+                </button>
+                <button
+                  onClick={() => { setEditingGalleryImage(null); setGalleryView('editor'); }}
+                  className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                >
+                  <FaPlus /> {t.addImage}
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+              {galleryLoading ? (
+                <div className="p-8 text-center text-gray-500">{t.loadingGallery}</div>
+              ) : galleryImages.length === 0 ? (
+                <div className="p-12 text-center text-gray-400">
+                  <FaImage size={48} className="mx-auto mb-4 opacity-50" />
+                  <p>{t.noGalleryImages}</p>
+                </div>
+              ) : (
+                <div className="p-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    {galleryImages.map(image => (
+                      <div key={image._id} className="group relative aspect-square rounded-lg overflow-hidden bg-gray-100 shadow-sm">
+                        <Image
+                          src={image.src}
+                          alt={image.alt || 'Gallery image'}
+                          fill
+                          className="object-cover transition-transform group-hover:scale-105"
+                          sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 20vw"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors" />
+                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                          <button
+                            onClick={() => { setEditingGalleryImage(image); setGalleryView('editor'); }}
+                            className="bg-white text-blue-600 p-2 rounded-lg shadow hover:bg-blue-50"
+                            title={t.edit}
+                          >
+                            <FaEdit size={14} />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteGalleryImage(image._id)}
+                            className="bg-white text-red-600 p-2 rounded-lg shadow hover:bg-red-50"
+                            title={t.delete}
+                          >
+                            <FaTrash size={14} />
+                          </button>
+                        </div>
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <p className="text-white text-xs truncate">{image.alt}</p>
+                          <p className="text-white/70 text-xs capitalize">{image.category}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Gallery Editor */}
+        {activeTab === 'gallery' && galleryView === 'editor' && (
+          <GalleryEditor
+            initialData={editingGalleryImage}
+            locale={locale}
+            t={t}
+            onCancel={() => setGalleryView('list')}
+            onSuccess={() => {
+              fetchGalleryImages();
+              setGalleryView('list');
+            }}
+          />
+        )}
+
+        {/* Site Images Management */}
+        {activeTab === 'siteImages' && siteImagesView === 'list' && (
+          <div>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+              <h1 className="text-2xl font-bold text-deep-brown">{t.siteImagesManagement}</h1>
+              <div className="flex flex-wrap items-center gap-3">
+                <select
+                  value={siteImagePageFilter}
+                  onChange={(e) => setSiteImagePageFilter(e.target.value)}
+                  className="p-2 border rounded-lg bg-white"
+                >
+                  <option value="all">{t.allPages}</option>
+                  <option value="home">{t.homePage}</option>
+                  <option value="about">{t.aboutPage}</option>
+                  <option value="gallery">{t.galleryPage}</option>
+                </select>
+                <button
+                  onClick={fetchSiteImages}
+                  className="flex items-center gap-2 bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
+                >
+                  {t.refresh}
+                </button>
+                <button
+                  onClick={handleSeedSiteImages}
+                  className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                >
+                  {t.seedImages}
+                </button>
+                <button
+                  onClick={() => { setEditingSiteImage(null); setSiteImagesView('editor'); }}
+                  className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                >
+                  <FaPlus /> {t.addImage}
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+              {siteImagesLoading ? (
+                <div className="p-8 text-center text-gray-500">{t.loadingSiteImages}</div>
+              ) : siteImages.length === 0 ? (
+                <div className="p-12 text-center text-gray-400">
+                  <FaImage size={48} className="mx-auto mb-4 opacity-50" />
+                  <p>{t.noSiteImages}</p>
+                  <button
+                    onClick={handleSeedSiteImages}
+                    className="mt-4 text-blue-600 hover:underline"
+                  >
+                    {t.seedImages}
+                  </button>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 uppercase text-xs">
+                      <tr>
+                        <th className="p-4">{t.image}</th>
+                        <th className="p-4">{t.imageKey}</th>
+                        <th className="p-4">{t.pageFilter}</th>
+                        <th className="p-4">{t.sectionFilter}</th>
+                        <th className="p-4">{t.altText}</th>
+                        <th className="p-4 text-right">{t.actions}</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {siteImages.map(image => (
+                        <tr key={image._id} className="hover:bg-gray-50">
+                          <td className="p-4">
+                            <div className="w-20 h-14 relative rounded overflow-hidden bg-gray-100">
+                              <Image
+                                src={image.src}
+                                alt={image.alt_en || 'Site image'}
+                                fill
+                                className="object-cover"
+                                sizes="80px"
+                              />
+                            </div>
+                          </td>
+                          <td className="p-4 font-mono text-sm text-deep-brown">{image.key}</td>
+                          <td className="p-4 capitalize">{image.page}</td>
+                          <td className="p-4">{image.section}</td>
+                          <td className="p-4 text-sm text-gray-500 max-w-xs truncate">{locale === 'ar' ? image.alt_ar : image.alt_en}</td>
+                          <td className="p-4 text-right">
+                            <button
+                              onClick={() => { setEditingSiteImage(image); setSiteImagesView('editor'); }}
+                              className="text-blue-500 p-2 hover:bg-blue-50 rounded mr-2"
+                              title={t.edit}
+                            >
+                              <FaEdit />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteSiteImage(image._id)}
+                              className="text-red-500 p-2 hover:bg-red-50 rounded"
+                              title={t.delete}
+                            >
+                              <FaTrash />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Site Image Editor */}
+        {activeTab === 'siteImages' && siteImagesView === 'editor' && (
+          <SiteImageEditor
+            initialData={editingSiteImage}
+            locale={locale}
+            t={t}
+            onCancel={() => setSiteImagesView('list')}
+            onSuccess={() => {
+              fetchSiteImages();
+              setSiteImagesView('list');
+            }}
+          />
+        )}
+
+        {/* Project Management */}
+        {activeTab === 'projects' && projectsView === 'list' && (
+          <div>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+              <h1 className="text-2xl font-bold text-deep-brown">{t.projectManagement}</h1>
+              <div className="flex flex-wrap items-center gap-3">
+                 <button
+                  onClick={fetchProjects}
+                  className="flex items-center gap-2 bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
+                >
+                  {t.refresh || 'Refresh'}
+                </button>
+                <button
+                  onClick={() => { setEditingProject(null); setProjectsView('editor'); }}
+                  className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                >
+                  <FaPlus /> {t.addProject}
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+               {projectsLoading ? (
+                 <div className="p-8 text-center text-gray-500">Loading projects...</div>
+               ) : projects.length === 0 ? (
+                 <div className="p-12 text-center text-gray-400">
+                   <FaBriefcase size={48} className="mx-auto mb-4 opacity-50" />
+                   <p>No projects found.</p>
+                 </div>
+               ) : (
+                <div className="overflow-x-auto">
+                 <table className="w-full text-left border-collapse">
+                   <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 uppercase text-xs">
+                     <tr>
+                       <th className="p-4">{t.image}</th>
+                       <th className="p-4">Title</th>
+                       <th className="p-4">{t.projectType}</th>
+                       <th className="p-4">{t.isCorporate}</th>
+                       <th className="p-4 text-right">{t.actions}</th>
+                     </tr>
+                   </thead>
+                   <tbody className="divide-y divide-gray-100">
+                     {projects.map(project => (
+                       <tr key={project._id} className="hover:bg-gray-50">
+                         <td className="p-4">
+                           <div className="w-16 h-12 relative rounded overflow-hidden bg-gray-100">
+                              {project.image?.url ? (
+                                <Image src={project.image.url} fill className="object-cover" alt="" sizes="64px" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-gray-300"><FaImage /></div>
+                              )}
+                           </div>
+                         </td>
+                         <td className="p-4 font-medium text-deep-brown">
+                           {locale === 'ar' ? project.title_ar : project.title_en}
+                           {project.featured && <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded">Featured</span>}
+                         </td>
+                         <td className="p-4 text-sm capitalize">{project.projectType}</td>
+                         <td className="p-4 text-sm">
+                           {project.isCorporate ? <span className="text-blue-600 font-medium">{t.corporate}</span> : <span className="text-gray-500">{t.residential}</span>}
+                         </td>
+                         <td className="p-4 text-right">
+                           <button
+                             onClick={() => { setEditingProject(project); setProjectsView('editor'); }}
+                             className="text-blue-500 p-2 hover:bg-blue-50 rounded mr-2"
+                             title={t.edit}
+                           >
+                             <FaEdit />
+                           </button>
+                           <button
+                             onClick={() => handleDeleteProject(project._id)}
+                             className="text-red-500 p-2 hover:bg-red-50 rounded"
+                             title={t.delete}
+                           >
+                             <FaTrash />
+                           </button>
+                         </td>
+                       </tr>
+                     ))}
+                   </tbody>
+                 </table>
+                </div>
+               )}
+            </div>
+          </div>
+        )}
+
+        {/* Project Editor */}
+        {activeTab === 'projects' && projectsView === 'editor' && (
+          <ProjectEditor
+            initialData={editingProject}
+            locale={locale}
+            t={t}
+            onCancel={() => setProjectsView('list')}
+            onSuccess={() => {
+              fetchProjects();
+              setProjectsView('list');
+            }}
+          />
         )}
 
       </div>
@@ -2497,6 +3111,768 @@ function CouponEditor({ initialData, onCancel, onSuccess }) {
             className="px-6 py-2 bg-deep-brown text-white rounded hover:bg-gold transition disabled:opacity-50"
           >
             {isLoading ? 'Saving...' : 'Save Coupon'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+// --- GalleryEditor Component ---
+function GalleryEditor({ initialData, locale, t, onCancel, onSuccess }) {
+  const isEditMode = !!initialData;
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(initialData?.src || null);
+
+  const [formData, setFormData] = useState({
+    alt: initialData?.alt || '',
+    caption_en: initialData?.caption_en || '',
+    caption_ar: initialData?.caption_ar || '',
+    category: initialData?.category || 'living-room',
+    status: initialData?.status || 'active',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('alt', formData.alt);
+      formDataToSend.append('caption_en', formData.caption_en);
+      formDataToSend.append('caption_ar', formData.caption_ar);
+      formDataToSend.append('category', formData.category);
+      formDataToSend.append('status', formData.status);
+
+      if (imageFile) {
+        formDataToSend.append('image', imageFile);
+      }
+
+      const url = isEditMode
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/gallery/${initialData._id}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/gallery`;
+
+      const res = await fetch(url, {
+        method: isEditMode ? 'PUT' : 'POST',
+        body: formDataToSend,
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert(locale === 'ar' ? 'تم الحفظ بنجاح' : 'Saved successfully!');
+        onSuccess();
+      } else {
+        alert(locale === 'ar' ? 'فشل الحفظ' : 'Failed to save');
+      }
+    } catch (error) {
+      console.error('Save error:', error);
+      alert(locale === 'ar' ? 'حدث خطأ' : 'An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
+      <div className="flex justify-between items-center mb-6 border-b pb-4">
+        <h2 className="text-xl font-bold text-deep-brown">
+          {isEditMode ? t.editImage : t.addImage}
+        </h2>
+        <button onClick={onCancel} className="text-gray-400 hover:text-red-500">
+          <FaTimes size={24} />
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Image Upload */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t.uploadImage}
+          </label>
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex-shrink-0">
+              {imagePreview ? (
+                <div className="relative w-48 h-48 rounded-lg overflow-hidden bg-gray-100">
+                  <Image
+                    src={imagePreview}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-48 h-48 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
+                  <FaImage size={48} className="text-gray-300" />
+                </div>
+              )}
+            </div>
+            <div className="flex-grow">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full p-3 border rounded-lg"
+              />
+              {!isEditMode && !imageFile && (
+                <p className="text-sm text-red-500 mt-2">
+                  {locale === 'ar' ? 'الصورة مطلوبة' : 'Image is required'}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Alt Text */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {t.altText}
+          </label>
+          <input
+            type="text"
+            name="alt"
+            value={formData.alt}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg"
+            placeholder="Living room furniture"
+          />
+        </div>
+
+        {/* Captions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t.captionEn}
+            </label>
+            <textarea
+              name="caption_en"
+              value={formData.caption_en}
+              onChange={handleChange}
+              rows={3}
+              className="w-full p-3 border rounded-lg"
+              placeholder="Beautiful living room set"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t.captionAr}
+            </label>
+            <textarea
+              name="caption_ar"
+              value={formData.caption_ar}
+              onChange={handleChange}
+              rows={3}
+              className="w-full p-3 border rounded-lg"
+              dir="rtl"
+              placeholder="طقم غرفة معيشة جميل"
+            />
+          </div>
+        </div>
+
+        {/* Category & Status */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t.category}
+            </label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg"
+            >
+              <option value="living-room">{t.livingRoom}</option>
+              <option value="bedroom">{t.bedroom}</option>
+              <option value="dining">{t.diningRoom}</option>
+              <option value="office">{t.officeRoom}</option>
+              <option value="kitchen">{t.kitchenRoom}</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t.status}
+            </label>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg"
+            >
+              <option value="active">{t.statusActive}</option>
+              <option value="inactive">{t.statusInactive}</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Submit Buttons */}
+        <div className="pt-6 border-t flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-6 py-2 border rounded hover:bg-gray-50"
+          >
+            {t.cancel}
+          </button>
+          <button
+            type="submit"
+            disabled={isLoading || (!isEditMode && !imageFile)}
+            className="px-6 py-2 bg-deep-brown text-white rounded hover:bg-gold transition disabled:opacity-50"
+          >
+            {isLoading ? t.saving : t.saveImage}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+// --- SiteImageEditor Component ---
+function SiteImageEditor({ initialData, locale, t, onCancel, onSuccess }) {
+  const isEditMode = !!initialData;
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(initialData?.src || null);
+
+  const [formData, setFormData] = useState({
+    key: initialData?.key || '',
+    page: initialData?.page || 'home',
+    section: initialData?.section || 'hero',
+    alt_en: initialData?.alt_en || '',
+    alt_ar: initialData?.alt_ar || '',
+    title_en: initialData?.title_en || '',
+    title_ar: initialData?.title_ar || '',
+    description_en: initialData?.description_en || '',
+    description_ar: initialData?.description_ar || '',
+    order: initialData?.order || 0,
+    isActive: initialData?.isActive ?? true,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const formDataToSend = new FormData();
+      Object.keys(formData).forEach(key => {
+        formDataToSend.append(key, formData[key]);
+      });
+
+      if (imageFile) {
+        formDataToSend.append('image', imageFile);
+      }
+
+      const url = isEditMode
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/site-images/${initialData._id}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/site-images`;
+
+      const res = await fetch(url, {
+        method: isEditMode ? 'PUT' : 'POST',
+        body: formDataToSend,
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert(locale === 'ar' ? 'تم الحفظ بنجاح' : 'Saved successfully!');
+        onSuccess();
+      } else {
+        alert(data.error || (locale === 'ar' ? 'فشل الحفظ' : 'Failed to save'));
+      }
+    } catch (error) {
+      console.error('Save error:', error);
+      alert(locale === 'ar' ? 'حدث خطأ' : 'An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
+      <div className="flex justify-between items-center mb-6 border-b pb-4">
+        <h2 className="text-xl font-bold text-deep-brown">
+          {isEditMode ? t.editImage : t.addImage}
+        </h2>
+        <button onClick={onCancel} className="text-gray-400 hover:text-red-500">
+          <FaTimes size={24} />
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Key & Locations */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+           <div className="md:col-span-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t.imageKey} <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="key"
+              value={formData.key}
+              onChange={handleChange}
+              disabled={isEditMode}
+              className="w-full p-3 border rounded-lg bg-gray-50"
+              placeholder="e.g. hero-main"
+              required
+            />
+            <p className="text-xs text-gray-500 mt-1">Unique identifier for this image</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t.pageFilter}
+            </label>
+            <select
+              name="page"
+              value={formData.page}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg"
+            >
+              <option value="home">{t.homePage}</option>
+              <option value="about">{t.aboutPage}</option>
+              <option value="gallery">{t.galleryPage}</option>
+              <option value="contact">Contact</option>
+              <option value="services">Services</option>
+              <option value="portfolio">Portfolio</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t.sectionFilter}
+            </label>
+            <input
+              type="text"
+              name="section"
+              value={formData.section}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg"
+              placeholder="e.g. hero, team, values"
+              required
+            />
+          </div>
+        </div>
+
+        {/* Image Upload */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t.uploadImage}
+          </label>
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex-shrink-0">
+              {imagePreview ? (
+                <div className="relative w-full md:w-64 h-48 rounded-lg overflow-hidden bg-gray-100">
+                  <Image
+                    src={imagePreview}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-full md:w-64 h-48 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
+                  <FaImage size={48} className="text-gray-300" />
+                </div>
+              )}
+            </div>
+            <div className="flex-grow">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full p-3 border rounded-lg"
+              />
+              {!isEditMode && !imageFile && (
+                <p className="text-sm text-red-500 mt-2">
+                  {locale === 'ar' ? 'الصورة مطلوبة' : 'Image is required'}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-gray-50 rounded-lg">
+          {/* English Content */}
+          <div className="space-y-4">
+             <h3 className="font-semibold text-gray-700 border-b pb-2">English Content</h3>
+             <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Title (EN)</label>
+                <input
+                  type="text"
+                  name="title_en"
+                  value={formData.title_en}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded"
+                />
+             </div>
+             <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Alt Text (EN)</label>
+                <input
+                  type="text"
+                  name="alt_en"
+                  value={formData.alt_en}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded"
+                />
+             </div>
+             <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description (EN)</label>
+                <textarea
+                  name="description_en"
+                  value={formData.description_en}
+                  onChange={handleChange}
+                  rows={3}
+                  className="w-full p-2 border rounded"
+                />
+             </div>
+          </div>
+
+          {/* Arabic Content */}
+          <div className="space-y-4">
+             <h3 className="font-semibold text-gray-700 border-b pb-2 text-right">المحتوى العربي</h3>
+             <div dir="rtl">
+                <label className="block text-sm font-medium text-gray-700 mb-1">العنوان (AR)</label>
+                <input
+                  type="text"
+                  name="title_ar"
+                  value={formData.title_ar}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded"
+                />
+             </div>
+             <div dir="rtl">
+                <label className="block text-sm font-medium text-gray-700 mb-1">النص البديل (AR)</label>
+                <input
+                  type="text"
+                  name="alt_ar"
+                  value={formData.alt_ar}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded"
+                />
+             </div>
+             <div dir="rtl">
+                <label className="block text-sm font-medium text-gray-700 mb-1">الوصف (AR)</label>
+                <textarea
+                  name="description_ar"
+                  value={formData.description_ar}
+                  onChange={handleChange}
+                  rows={3}
+                  className="w-full p-2 border rounded"
+                />
+             </div>
+          </div>
+        </div>
+
+        {/* Meta */}
+        <div className="flex gap-6">
+           <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Order
+            </label>
+            <input
+              type="number"
+              name="order"
+              value={formData.order}
+              onChange={handleChange}
+              className="w-24 p-2 border rounded-lg"
+            />
+           </div>
+
+           <div className="flex items-center pt-6">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="isActive"
+                  checked={formData.isActive}
+                  onChange={handleChange}
+                  className="w-4 h-4"
+                />
+                <span className="text-sm font-medium text-gray-700">{t.active || 'Active'}</span>
+              </label>
+           </div>
+        </div>
+
+        {/* Submit Buttons */}
+        <div className="pt-6 border-t flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-6 py-2 border rounded hover:bg-gray-50"
+          >
+            {t.cancel}
+          </button>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="px-6 py-2 bg-deep-brown text-white rounded hover:bg-gold transition disabled:opacity-50"
+          >
+            {isLoading ? t.saving : t.saveImage}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+// --- ProjectEditor Component ---
+function ProjectEditor({ initialData, locale, t, onCancel, onSuccess }) {
+  const isEditMode = !!initialData;
+  const [isLoading, setIsLoading] = useState(false);
+  const [mainImageFile, setMainImageFile] = useState(null);
+  const [mainImagePreview, setMainImagePreview] = useState(initialData?.image?.url || null);
+
+  const [formData, setFormData] = useState({
+    title_en: initialData?.title_en || '',
+    title_ar: initialData?.title_ar || '',
+    description_en: initialData?.description_en || '',
+    description_ar: initialData?.description_ar || '',
+    projectType: initialData?.projectType || 'residential',
+    isCorporate: initialData?.isCorporate || false,
+    featured: initialData?.featured || false,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setMainImageFile(file);
+      setMainImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const formDataToSend = new FormData();
+      Object.keys(formData).forEach(key => {
+        formDataToSend.append(key, formData[key]);
+      });
+
+      if (mainImageFile) {
+        formDataToSend.append('image', mainImageFile);
+      }
+
+      const url = isEditMode
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/projects/${initialData._id}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/projects`;
+
+      const res = await fetch(url, {
+        method: isEditMode ? 'PUT' : 'POST',
+        body: formDataToSend,
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert(locale === 'ar' ? 'تم الحفظ بنجاح' : 'Saved successfully!');
+        onSuccess();
+      } else {
+        alert(data.error || (locale === 'ar' ? 'فشل الحفظ' : 'Failed to save'));
+      }
+    } catch (error) {
+      console.error('Save error:', error);
+      alert(locale === 'ar' ? 'حدث خطأ' : 'An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
+      <div className="flex justify-between items-center mb-6 border-b pb-4">
+        <h2 className="text-xl font-bold text-deep-brown">
+          {isEditMode ? t.editProject : t.addProject}
+        </h2>
+        <button onClick={onCancel} className="text-gray-400 hover:text-red-500">
+          <FaTimes size={24} />
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Basic Info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+           <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t.projectType}
+              </label>
+              <select
+                name="projectType"
+                value={formData.projectType}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+              >
+                <option value="residential">{t.residential}</option>
+                <option value="corporate">{t.corporate}</option>
+                <option value="custom">{t.custom}</option>
+                <option value="antique">{t.antique}</option>
+              </select>
+           </div>
+
+           <div className="flex gap-4 items-center pt-6">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="isCorporate"
+                  checked={formData.isCorporate}
+                  onChange={handleChange}
+                  className="w-4 h-4"
+                />
+                <span className="text-sm font-medium text-gray-700">{t.isCorporate}</span>
+              </label>
+
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="featured"
+                  checked={formData.featured}
+                  onChange={handleChange}
+                  className="w-4 h-4"
+                />
+                <span className="text-sm font-medium text-gray-700">{t.featured}</span>
+              </label>
+           </div>
+        </div>
+
+        {/* Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-gray-50 rounded-lg">
+          <div className="space-y-4">
+             <h3 className="font-semibold text-gray-700 border-b pb-2">English Content</h3>
+             <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Title (EN) *</label>
+                <input
+                  type="text"
+                  name="title_en"
+                  value={formData.title_en}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded"
+                  required
+                />
+             </div>
+             <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description (EN)</label>
+                <textarea
+                  name="description_en"
+                  value={formData.description_en}
+                  onChange={handleChange}
+                  rows={4}
+                  className="w-full p-2 border rounded"
+                />
+             </div>
+          </div>
+
+          <div className="space-y-4">
+             <h3 className="font-semibold text-gray-700 border-b pb-2 text-right">المحتوى العربي</h3>
+             <div dir="rtl">
+                <label className="block text-sm font-medium text-gray-700 mb-1">العنوان (AR) *</label>
+                <input
+                  type="text"
+                  name="title_ar"
+                  value={formData.title_ar}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded"
+                  required
+                />
+             </div>
+             <div dir="rtl">
+                <label className="block text-sm font-medium text-gray-700 mb-1">الوصف (AR)</label>
+                <textarea
+                  name="description_ar"
+                  value={formData.description_ar}
+                  onChange={handleChange}
+                  rows={4}
+                  className="w-full p-2 border rounded"
+                />
+             </div>
+          </div>
+        </div>
+
+        {/* Main Image */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t.mainImage}
+          </label>
+          <div className="flex flex-col md:flex-row gap-6">
+             <div className="flex-shrink-0">
+               {mainImagePreview ? (
+                 <div className="relative w-full md:w-64 h-48 rounded-lg overflow-hidden bg-gray-100">
+                   <Image
+                     src={mainImagePreview}
+                     alt="Preview"
+                     fill
+                     className="object-cover"
+                   />
+                 </div>
+               ) : (
+                 <div className="w-full md:w-64 h-48 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
+                   <FaImage size={48} className="text-gray-300" />
+                 </div>
+               )}
+             </div>
+             <div className="flex-grow">
+               <input
+                 type="file"
+                 accept="image/*"
+                 onChange={handleImageChange}
+                 className="w-full p-3 border rounded-lg"
+               />
+               <p className="text-xs text-gray-500 mt-2">Only basic project info and main image supported here.</p>
+             </div>
+          </div>
+        </div>
+
+        {/* Buttons */}
+        <div className="pt-6 border-t flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-6 py-2 border rounded hover:bg-gray-50"
+          >
+            {t.cancel}
+          </button>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="px-6 py-2 bg-deep-brown text-white rounded hover:bg-gold transition disabled:opacity-50"
+          >
+            {isLoading ? t.saving : t.saveImage}
           </button>
         </div>
       </form>

@@ -54,7 +54,7 @@ export default function CartSidebar({ locale = 'en' }) {
           ) : (
             <div className="space-y-4">
               {cartItems.map((item) => (
-                <div key={`${item.product._id}-${item.variantKey}`} className="flex gap-4 p-3 bg-gray-50 rounded-lg border border-gray-100 relative group">
+                <div key={item.cartItemId} className="flex gap-4 p-3 bg-gray-50 rounded-lg border border-gray-100 relative group">
                   {/* Image */}
                   <div className="relative w-20 h-20 bg-white rounded overflow-hidden flex-shrink-0">
                     {item.product.image?.url ?(
@@ -76,13 +76,13 @@ export default function CartSidebar({ locale = 'en' }) {
                     {/* Quantity Controls */}
                     <div className="flex items-center gap-2">
                        <button
-                        onClick={() => updateQuantity(item.product._id, item.variantKey, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
                         className="w-6 h-6 flex items-center justify-center bg-white border border-gray-300 rounded hover:bg-gray-100"
                         disabled={item.quantity <= 1}
                        >-</button>
                        <span className="text-sm font-medium w-4 text-center">{item.quantity}</span>
                        <button
-                        onClick={() => updateQuantity(item.product._id, item.variantKey, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
                         className="w-6 h-6 flex items-center justify-center bg-white border border-gray-300 rounded hover:bg-gray-100"
                        >+</button>
                     </div>
@@ -90,7 +90,7 @@ export default function CartSidebar({ locale = 'en' }) {
 
                   {/* Remove Button */}
                   <button
-                    onClick={() => removeFromCart(item.product._id, item.variantKey)}
+                    onClick={() => removeFromCart(item.cartItemId)}
                     className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors p-2"
                   >
                     <FaTrash size={14} />

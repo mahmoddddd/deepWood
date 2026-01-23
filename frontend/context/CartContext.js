@@ -17,7 +17,12 @@ export function CartProvider({ children }) {
       if (savedCart) {
         try {
           const parsedCart = JSON.parse(savedCart);
-          setCartItems(parsedCart);
+          // Migration: Ensure all items have a unique ID
+          const cartWithIds = parsedCart.map(item => ({
+            ...item,
+            cartItemId: item.cartItemId || `cart_item_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+          }));
+          setCartItems(cartWithIds);
         } catch (error) {
           console.error('Failed to parse cart from localStorage:', error);
           localStorage.removeItem('deepwood_cart');
@@ -62,6 +67,7 @@ export function CartProvider({ children }) {
             quantity,
             selectedVariant,
             variantKey,
+            cartItemId: `cart_item_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             price: product.price, // Store price at adding time or use current product price
             addedAt: new Date().toISOString()
           },
@@ -71,20 +77,18 @@ export function CartProvider({ children }) {
     setIsCartOpen(true); // Auto open cart to show confirmation
   };
 
-  const removeFromCart = (productId, variantKey = '') => {
+  const removeFromCart = (cartItemId) => {
     setCartItems((prevItems) =>
-      prevItems.filter(
-        (item) => !(item.product._id === productId && item.variantKey === variantKey)
-      )
+      prevItems.filter((item) => item.cartItemId !== cartItemId)
     );
   };
 
-  const updateQuantity = (productId, variantKey = '', newQuantity) => {
+  const updateQuantity = (cartItemId, newQuantity) => {
     if (newQuantity < 1) return;
 
     setCartItems((prevItems) =>
       prevItems.map((item) => {
-        if (item.product._id === productId && item.variantKey === variantKey) {
+        if (item.cartItemId === cartItemId) {
           return { ...item, quantity: newQuantity };
         }
         return item;
